@@ -1,14 +1,12 @@
 // Require mongoose to create a model.
 var mongoose = require('mongoose');
 
-
+mongoose.Promise = Promise;
 
 //Schema of User model
 var userSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  facebookId: String,
-  age: String,
+  name: String,
+  dob: Date,
   level: Number,
   email: String
 });

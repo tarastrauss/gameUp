@@ -5,11 +5,11 @@
       .module("gameUpApp")
       .controller("ModalController", ModalController);
 
-  ModalController.$inject = ['$uibModal', '$scope', '$timeout', 'userService', '$state'];
+  ModalController.$inject = ['$uibModal', '$scope', '$timeout', 'userDataService', '$state'];
 
-  function ModalController($uibModal, $scope, $timeout, userService, $state) {
+  function ModalController($uibModal, $scope, $timeout, userDataService, $state) {
 
-    $scope.userService = userService;
+    $scope.userDataService = userDataService;
 
     $scope.changeState = function () {
       $timeout(function(){
@@ -93,9 +93,12 @@
       .module("gameUpApp")
       .controller("ModalInstanceController", ModalInstanceController);
 
-    ModalInstanceController.$inject = ['$scope', '$uibModalInstance'];
+    ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log'];
 
-    function ModalInstanceController($scope, $uibModalInstance) {
+    function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log) {
+
+      $scope.user = userDataService;
+      $scope.auth = authService;
 
       $scope.random = Math.floor((Math.random() * 2) + 1);
       $scope.color = $scope.random === 1 ? "primary" : "danger";
@@ -103,6 +106,27 @@
       $scope.ok = function () {
         $uibModalInstance.close();
       };
+
+      $scope.createUser = function() {
+        $log.log('creating user!');
+        $scope.user.create()
+
+        .then(function(data, status, headers, config) {
+          $log.debug("Success:", data,status,headers,config)
+
+          $scope.successMessage = angular.toJson(data.data);
+          $scope.failureMessage = "Present any error messages here.";
+          $scope.user.clear();
+          $state.go('gamePage')
+        })
+
+        .catch(function(data, status, headers, config) {
+          $log.debug("Failure:", data,status,headers,config)
+
+          $scope.successMessage = "Present all of the current user's data here.";
+          $scope.failureMessage = angular.toJson(data.data);
+      });
+    };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
