@@ -5,17 +5,19 @@
     .module("gameUpApp")
     .factory("userDataService", userDataService);
 
-  userDataService.$inject = ["$log", "$http"];
+  userDataService.$inject = ["$log", "$http", '$rootScope'];
 
-  function userDataService($log, $http) {
+  function userDataService($log, $http, $rootScope) {
     var user = {
       email:           "",
       name:            "",
       password:        "",
       dob:             new Date(1990, 10, 1),
+      level:           1,
       create:          create,
       clear:           clear,
-      currentUserData: currentUserData
+      currentUserData: currentUserData,
+      currentUser: currentUser
     };
 
     return user;
@@ -31,6 +33,7 @@
           email:    user.email,
           name:     user.name,
           password: user.password,
+          level:    1,
           dob:      user.dob.toISOString()
         })
       });
@@ -45,12 +48,19 @@
       user.dob      = "";
     }
 
+    var currentUser = "";
+
     function currentUserData() {
       $log.debug("Retrieving current user data.");
 
       return $http({
         url:     "http://localhost:3000/api/me",
         method:  "GET"
+      }).then(function(data) {
+        // $log.log('data is', data.data.data);
+        currentUser = data.data.data;
+        $log.log('user is', currentUser);
+        return currentUser;
       });
     }
   }

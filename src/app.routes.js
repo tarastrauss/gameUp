@@ -11,7 +11,12 @@
     $stateProvider
       .state("landingPage", {
         url: "/",
-        templateUrl: "/templates/landing.html",
+        views: {
+          content: {
+            templateUrl: "/templates/landing.html"
+          }
+        },
+        // templateUrl: "/templates/landing.html",
         controller: "MainController",
         controllerAs: "vm"
       })
@@ -21,7 +26,15 @@
       })
       .state("gamePage", {
         url: "/game",
-        templateUrl: "/templates/game.html",
+        views: {
+          nav: {
+            templateUrl: '/templates/navbar.html'
+          },
+          content: {
+            templateUrl: "/templates/game.html"
+          }
+        },
+        // templateUrl: "/templates/game.html",
         controller: "GameController",
         controllerAs: "vm"
       });

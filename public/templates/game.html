@@ -1,29 +1,59 @@
-
-<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" >
-  <div class="container-fluid">
-    <div class="navbar-header navbar-brand">
-      <span role="presentation" ui-sref-active="active">
-        <a ui-sref="profilePage">Profile ( {{vm.user.name}} )</a>
-      </span>
+<script type="text/ng-template" id="wonGame.html">
+  <div id="gamedUp" >
+    <div class="modal-header">
+      <h4 class="modal-title" id="loginLabel">You have <span class="play"><em>Gamed Up</em></span>!</h4>
     </div>
-
-    <div class="collapse navbar-collapse">
-      <h2 class="nav navbar-nav play" id="nav-inform"> GameUp </h2>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="nav-options" role="presentation" ui-sref-active="active">
-          <a ui-sref="feedPage">GameUp</a>
-        </li>
-        <li class="nav-options" role="presentation" ui-sref-active="active">
-          <a ui-sref="candidatesPage">Games</a>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-right" role="search" ng-submit="search()">
-<!--         <div class="form-group">
-          <input type="text" ng-model="query" class="form-control" placeholder="Barak Obama">
-        </div>&nbsp;&nbsp;
-        <button type="submit" class="btn btn-warning">Search for News</button> -->
-      </form>
+    <div class="modal-body login-body">
+      <div> Try your next challenge! </div>
+        <button type="submit" class="modal-btn btn btn-{{color}}" ng-click="ok()">Next</button>
     </div>
   </div>
+</script>
 
-</nav>
+
+
+<div class="container" id="game" ng-controller="GameController as vm">
+  <h2> Level {{vm.user.level}} - {{vm.gameName}} </h2>
+  <div id="gameView">
+
+ <!--      <div ui-view="specificGame" layout-fill>
+      PAGE TEMPLATES INSERT HERE
+      </div> -->
+    <div id="game1" ng-if="vm.user.level===1">
+      <div class="game1-row">
+        <div ng-click="vm.addTurn(0)" class="game1-col script" id="game1-1">{{vm.box[0]}}
+        </div>
+        <div ng-click="vm.addTurn(1)" class="game1-col script" id="game1-2">{{vm.box[1]}}
+        </div>
+        <div ng-click="vm.addTurn(2)" class="game1-col script" id="game1-3">{{vm.box[2]}}
+        </div>
+      </div>
+       <div class="game1-row">
+        <div ng-click="vm.addTurn(3)" class="game1-col script" id="game1-4">{{vm.box[3]}}
+        </div>
+        <div ng-click="vm.addTurn(4)" class="game1-col script" id="game1-5">{{vm.box[4]}}
+        </div>
+        <div ng-click="vm.addTurn(5)" class="game1-col script" id="game1-6">{{vm.box[5]}}
+        </div>
+      </div>
+       <div class="game1-row">
+        <div ng-click="vm.addTurn(6)" class="game1-col script" id="game1-7">{{vm.box[6]}}
+        </div>
+        <div ng-click="vm.addTurn(7)" class="game1-col script" id="game1-8">{{vm.box[7]}}
+        </div>
+        <div ng-click="vm.addTurn(8)" class="game1-col script" id="game1-9">{{vm.box[8]}}
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+
+  </div>
+
+</div>
+
+

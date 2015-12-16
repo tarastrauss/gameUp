@@ -37,31 +37,31 @@
     //   });
     // };
 
-    vm.logInUser = function() {
-      vm.auth.logIn()
+    // vm.logInUser = function() {
+    //   vm.auth.logIn()
 
-      .then(function(data) {
-        $log.debug("Success:", data)
+    //   .then(function(data) {
+    //     $log.debug("Success:", data)
 
-        return vm.user.currentUserData();
-      })
+    //     return vm.user.currentUserData();
+    //   })
 
-      .then(function(data) {
-        $log.debug("Success:", data)
+    //   .then(function(data) {
+    //     $log.debug("Success:", data)
 
-        vm.auth.clear();
+    //     vm.auth.clear();
 
-        vm.successMessage = angular.toJson(data.data);
-        vm.failureMessage = "Present any error messages here.";
-      })
+    //     vm.successMessage = angular.toJson(data.data);
+    //     vm.failureMessage = "Present any error messages here.";
+    //   })
 
-      .catch(function(data, status, headers, config) {
-        $log.debug("Failure:", data, status, headers, config)
+    //   .catch(function(data, status, headers, config) {
+    //     $log.debug("Failure:", data, status, headers, config)
 
-        vm.successMessage = "Present all of the current user's data here.";
-        vm.failureMessage = angular.toJson(data.data);
-      });
-    };
+    //     vm.successMessage = "Present all of the current user's data here.";
+    //     vm.failureMessage = angular.toJson(data.data);
+    //   });
+    // };
   }
 
 })();

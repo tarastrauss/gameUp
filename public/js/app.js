@@ -347,7 +347,7 @@ f[g];h&&e.push(function(){var e,f,g=!1,p=function(a){g||(g=!0,(f||M)(a),e.comple
 e.length)return function(a){var b=[];e.length&&w(e,function(a){b.push(a())});b.length?c.all(b,a):a();return function(a){w(b,function(b){a?b.cancel():b.end()})}}}3===arguments.length&&ra(d)&&(v=d,d=null);v=ma(v);d||(d=a.attr("class")||"",v.addClass&&(d+=" "+v.addClass),v.removeClass&&(d+=" "+v.removeClass));var C=v.addClass,J=v.removeClass,s=f(d),y,z;if(s.length){var B,H;"leave"==b?(H="leave",B="afterLeave"):(H="before"+b.charAt(0).toUpperCase()+b.substr(1),B=b);"enter"!==b&&"move"!==b&&(y=I(a,b,v,
 s,H));z=I(a,b,v,s,B)}if(y||z)return{start:function(){function b(c){g=!0;t();ha(a,v);h.complete(c)}var d,f=[];y&&f.push(function(a){d=y(a)});f.length?f.push(function(a){t();a(!0)}):t();z&&f.push(function(a){d=z(a)});var g=!1,h=new c({end:function(){g||((d||M)(void 0),b(void 0))},cancel:function(){g||((d||M)(!0),b(!0))}});c.chain(f,b);return h}}}}]}]).provider("$$animateJsDriver",["$$animationProvider",function(a){a.drivers.push("$$animateJsDriver");this.$get=["$$animateJs","$$AnimateRunner",function(a,
 c){function d(c){return a(c.element,c.event,c.classes,c.options)}return function(a){if(a.from&&a.to){var b=d(a.from),t=d(a.to);if(b||t)return{start:function(){function a(){return function(){w(d,function(a){a.end()})}}var d=[];b&&d.push(b.start());t&&d.push(t.start());c.all(d,function(a){f.complete(a)});var f=new c({end:a(),cancel:a()});return f}}}else return d(a)}}]}])})(window,window.angular);
-//# sourceMappingURL=angular-animate.min.js.map
+
 
 /*
  * angular-ui-bootstrap
@@ -414,7 +414,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     $stateProvider
       .state("landingPage", {
         url: "/",
-        templateUrl: "/templates/landing.html",
+        views: {
+          content: {
+            templateUrl: "/templates/landing.html"
+          }
+        },
+        // templateUrl: "/templates/landing.html",
         controller: "MainController",
         controllerAs: "vm"
       })
@@ -424,7 +429,15 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       })
       .state("gamePage", {
         url: "/game",
-        templateUrl: "/templates/game.html",
+        views: {
+          nav: {
+            templateUrl: '/templates/navbar.html'
+          },
+          content: {
+            templateUrl: "/templates/game.html"
+          }
+        },
+        // templateUrl: "/templates/game.html",
         controller: "GameController",
         controllerAs: "vm"
       });
@@ -471,19 +484,154 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
   angular
       .module("gameUpApp")
+      .controller('DropdownController', DropdownController);
+
+  DropdownController.$inject = ["$scope", "$log", "userDataService", "authService"];
+
+  function DropdownController ($scope, $log, userDataService, authService) {
+
+    var dd = this;
+    dd.user = userDataService;
+    dd.auth = authService;
+    dd.message="hi";
+
+    dd.items = [
+      'Profile',
+      'Logout'
+    ];
+
+    dd.status = {
+      isopen: false
+    };
+
+    dd.toggled = function(open) {
+      $log.log('Dropdown is now: ', open);
+    };
+
+    dd.toggleDropdown = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      $scope.status.isopen = !$scope.status.isopen;
+    };
+
+    dd.currentUser = userDataService.currentUser;
+
+  };
+
+})();
+
+(function() {
+  "use strict";
+
+  angular
+      .module("gameUpApp")
       .controller("GameController", GameController);
+      // .config(specificGameRoutes);
 
-  GameController.$inject = ["$log"];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal'];
+  // specificGameRoutes.$inject = ["$stateProvder"];
 
-
-  function GameController($log) {
+  function GameController($log, userDataService, $location, $uibModal) {
     var vm = this;
 
     vm.message = "fun";
 
-    // vm.user = userDataService;
+    vm.user = userDataService;
 
+    vm.wonGame = function () {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'wonGame.html',
+        controller: ModalInstanceController,
+        resolve: {
+
+        }
+      });
+
+      modalInstance.result.then(function () {
+
+      }, function () {
+        console.log('Modal dismissed at: ' + new Date());
+      });
+
+    }
+
+    if (vm.user.level === 1) {
+      vm.gameOneWon = false;
+      vm.gameName = "Tic Tac Toe"
+      vm.turn = true;
+      vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+      vm.addTurn = function (num) {
+        if (vm.box[num] === " ") {
+          if (vm.turn) {
+            vm.box[num] = "X";
+            vm.turn = false;
+          } else {
+            vm.box[num] = "O";
+            vm.turn = true;
+          }
+        }
+        vm.checkForWinner();
+      }
+      vm.checkForWinner = function () {
+        vm.box.forEach(function(singleBox, index) {
+          if (singleBox !== " ") {
+            if (index === 0 || index === 3 || index === 6) {
+              if (singleBox === vm.box[index + 1] && singleBox === vm.box[index + 2]) {
+                vm.gameOneWon = true;
+              }
+            }
+            if (index === 0 || index === 1 || index === 2) {
+              if (singleBox === vm.box[index + 3] && singleBox === vm.box[index + 6]) {
+                vm.gameOneWon = true;
+              }
+            }
+            if (index === 0){
+              if (singleBox === vm.box[index + 4] && singleBox === vm.box[index + 8]) {
+                vm.gameOneWon = true;
+              }
+            }
+            if (index === 2) {
+              if (singleBox === vm.box[index + 2] && singleBox === vm.box[index + 4]) {
+                vm.gameOneWon = true;
+              }
+            }
+          }
+        });
+        if (vm.gameOneWon) {
+          vm.wonGame();
+        }
+      }
+    }
   }
+
+  angular
+    .module("gameUpApp")
+    .controller("ModalInstanceController", ModalInstanceController);
+
+  ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log', '$state'];
+
+  function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log, $state) {
+
+    $scope.user = userDataService;
+    $scope.auth = authService;
+
+    $scope.random = Math.floor((Math.random() * 2) + 1);
+    $scope.color = $scope.random === 1 ? "primary" : "danger";
+
+    $scope.ok = function () {
+      $uibModalInstance.close();
+      // $state.go('gamePage');
+
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+
+  };
+
 })();
 
 (function() {
@@ -525,31 +673,31 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     //   });
     // };
 
-    vm.logInUser = function() {
-      vm.auth.logIn()
+    // vm.logInUser = function() {
+    //   vm.auth.logIn()
 
-      .then(function(data) {
-        $log.debug("Success:", data)
+    //   .then(function(data) {
+    //     $log.debug("Success:", data)
 
-        return vm.user.currentUserData();
-      })
+    //     return vm.user.currentUserData();
+    //   })
 
-      .then(function(data) {
-        $log.debug("Success:", data)
+    //   .then(function(data) {
+    //     $log.debug("Success:", data)
 
-        vm.auth.clear();
+    //     vm.auth.clear();
 
-        vm.successMessage = angular.toJson(data.data);
-        vm.failureMessage = "Present any error messages here.";
-      })
+    //     vm.successMessage = angular.toJson(data.data);
+    //     vm.failureMessage = "Present any error messages here.";
+    //   })
 
-      .catch(function(data, status, headers, config) {
-        $log.debug("Failure:", data, status, headers, config)
+    //   .catch(function(data, status, headers, config) {
+    //     $log.debug("Failure:", data, status, headers, config)
 
-        vm.successMessage = "Present all of the current user's data here.";
-        vm.failureMessage = angular.toJson(data.data);
-      });
-    };
+    //     vm.successMessage = "Present all of the current user's data here.";
+    //     vm.failureMessage = angular.toJson(data.data);
+    //   });
+    // };
   }
 
 })();
@@ -627,6 +775,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       });
     };
 
+
+
     // $timeout(function() {
     //  $('#intro-buttons').append('<span id="login" ng-click="openLogin('true')" class="intro btn btn-default fadeIn animated"> Login </span>');
     //  $('#intro-buttons').append('<span id="started" class="intro btn btn-default fadeIn animated" > Get Started </span>');
@@ -649,9 +799,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       .module("gameUpApp")
       .controller("ModalInstanceController", ModalInstanceController);
 
-    ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log'];
+    ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log', '$state'];
 
-    function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log) {
+    function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log, $state) {
 
       $scope.user = userDataService;
       $scope.auth = authService;
@@ -661,6 +811,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
       $scope.ok = function () {
         $uibModalInstance.close();
+        $state.go('gamePage');
+
       };
 
       $scope.createUser = function() {
@@ -672,8 +824,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
           $scope.successMessage = angular.toJson(data.data);
           $scope.failureMessage = "Present any error messages here.";
-          $scope.user.clear();
-          $state.go('gamePage')
+          // $scope.user.clear();
+          $uibModalInstance.close();
+          $state.go('gamePage');
+          $scope.logInUser();
         })
 
         .catch(function(data, status, headers, config) {
@@ -681,8 +835,36 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
           $scope.successMessage = "Present all of the current user's data here.";
           $scope.failureMessage = angular.toJson(data.data);
-      });
-    };
+        });
+      };
+
+      $scope.logInUser = function() {
+        $scope.auth.logIn()
+
+          .then(function(data) {
+            $log.debug("Success:", data)
+
+             return $scope.user.currentUserData();
+          })
+
+          .then(function(data) {
+            $log.debug("Success logging user:", data)
+            $scope.user.currentUser = data;
+            $uibModalInstance.close();
+            $state.go('gamePage');
+            $scope.auth.clear();
+
+            $scope.successMessage = angular.toJson(data.data);
+            $scope.failureMessage = "Present any error messages here.";
+          })
+
+          .catch(function(data, status, headers, config) {
+            $log.debug("Failure:", data, status, headers, config)
+
+            $scope.successMessage = "Present all of the current user's data here.";
+            $scope.failureMessage = angular.toJson(data.data);
+          });
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
@@ -706,9 +888,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     .module("gameUpApp")
     .factory("authService", authService);
 
-  authService.$inject = ["$log", "$http", "tokenService"];
+  authService.$inject = ["$log", "$http", "tokenService", '$state', 'userDataService'];
 
-  function authService($log, $http, tokenService) {
+  function authService($log, $http, tokenService, $state, userDataService) {
     var auth = {
       email:      "",
       password:   "",
@@ -717,6 +899,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       clear:      clear,
       isLoggedIn: (tokenService.get() !== null)
     };
+
+
 
     return auth;
 
@@ -734,7 +918,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       }).then(function(data, status, headers, config) {
         tokenService.set(data.data.token)
         auth.isLoggedIn = true;
-
+        // userDataService.currentUserData();
         return data;
       });
     }
@@ -742,6 +926,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     function logOut() {
       tokenService.clear();
       auth.isLoggedIn = false;
+      $log.log('logged out!');
+      $state.go('landingPage');
     }
 
     function clear() {
@@ -824,17 +1010,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     .module("gameUpApp")
     .factory("userDataService", userDataService);
 
-  userDataService.$inject = ["$log", "$http"];
+  userDataService.$inject = ["$log", "$http", '$rootScope'];
 
-  function userDataService($log, $http) {
+  function userDataService($log, $http, $rootScope) {
     var user = {
       email:           "",
       name:            "",
       password:        "",
       dob:             new Date(1990, 10, 1),
+      level:           1,
       create:          create,
       clear:           clear,
-      currentUserData: currentUserData
+      currentUserData: currentUserData,
+      currentUser: currentUser
     };
 
     return user;
@@ -850,6 +1038,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           email:    user.email,
           name:     user.name,
           password: user.password,
+          level:    1,
           dob:      user.dob.toISOString()
         })
       });
@@ -864,12 +1053,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       user.dob      = "";
     }
 
+    var currentUser = "";
+
     function currentUserData() {
       $log.debug("Retrieving current user data.");
 
       return $http({
         url:     "http://localhost:3000/api/me",
         method:  "GET"
+      }).then(function(data) {
+        // $log.log('data is', data.data.data);
+        currentUser = data.data.data;
+        $log.log('user is', currentUser);
+        return currentUser;
       });
     }
   }

@@ -19,7 +19,8 @@ module.exports = function(app, errorHandler) {
         email:    req.body.email,
         name:     req.body.name,
         password: req.body.password,
-        dob:      Date.parse(req.body.dob)
+        dob:      Date.parse(req.body.dob),
+        level:    1
       }).then(function(newUser) {
         res.json({
           success: true,

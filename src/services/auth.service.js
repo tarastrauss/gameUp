@@ -5,9 +5,9 @@
     .module("gameUpApp")
     .factory("authService", authService);
 
-  authService.$inject = ["$log", "$http", "tokenService"];
+  authService.$inject = ["$log", "$http", "tokenService", '$state', 'userDataService'];
 
-  function authService($log, $http, tokenService) {
+  function authService($log, $http, tokenService, $state, userDataService) {
     var auth = {
       email:      "",
       password:   "",
@@ -16,6 +16,8 @@
       clear:      clear,
       isLoggedIn: (tokenService.get() !== null)
     };
+
+
 
     return auth;
 
@@ -33,7 +35,7 @@
       }).then(function(data, status, headers, config) {
         tokenService.set(data.data.token)
         auth.isLoggedIn = true;
-
+        // userDataService.currentUserData();
         return data;
       });
     }
@@ -41,6 +43,8 @@
     function logOut() {
       tokenService.clear();
       auth.isLoggedIn = false;
+      $log.log('logged out!');
+      $state.go('landingPage');
     }
 
     function clear() {

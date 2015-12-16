@@ -71,6 +71,8 @@
       });
     };
 
+
+
     // $timeout(function() {
     //  $('#intro-buttons').append('<span id="login" ng-click="openLogin('true')" class="intro btn btn-default fadeIn animated"> Login </span>');
     //  $('#intro-buttons').append('<span id="started" class="intro btn btn-default fadeIn animated" > Get Started </span>');
@@ -93,9 +95,9 @@
       .module("gameUpApp")
       .controller("ModalInstanceController", ModalInstanceController);
 
-    ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log'];
+    ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'authService', 'userDataService', '$log', '$state'];
 
-    function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log) {
+    function ModalInstanceController($scope, $uibModalInstance, authService, userDataService, $log, $state) {
 
       $scope.user = userDataService;
       $scope.auth = authService;
@@ -105,6 +107,8 @@
 
       $scope.ok = function () {
         $uibModalInstance.close();
+        $state.go('gamePage');
+
       };
 
       $scope.createUser = function() {
@@ -116,8 +120,10 @@
 
           $scope.successMessage = angular.toJson(data.data);
           $scope.failureMessage = "Present any error messages here.";
-          $scope.user.clear();
-          $state.go('gamePage')
+          // $scope.user.clear();
+          $uibModalInstance.close();
+          $state.go('gamePage');
+          $scope.logInUser();
         })
 
         .catch(function(data, status, headers, config) {
@@ -125,8 +131,36 @@
 
           $scope.successMessage = "Present all of the current user's data here.";
           $scope.failureMessage = angular.toJson(data.data);
-      });
-    };
+        });
+      };
+
+      $scope.logInUser = function() {
+        $scope.auth.logIn()
+
+          .then(function(data) {
+            $log.debug("Success:", data)
+
+             return $scope.user.currentUserData();
+          })
+
+          .then(function(data) {
+            $log.debug("Success logging user:", data)
+            $scope.user.currentUser = data;
+            $uibModalInstance.close();
+            $state.go('gamePage');
+            $scope.auth.clear();
+
+            $scope.successMessage = angular.toJson(data.data);
+            $scope.failureMessage = "Present any error messages here.";
+          })
+
+          .catch(function(data, status, headers, config) {
+            $log.debug("Failure:", data, status, headers, config)
+
+            $scope.successMessage = "Present all of the current user's data here.";
+            $scope.failureMessage = angular.toJson(data.data);
+          });
+      };
 
       $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');

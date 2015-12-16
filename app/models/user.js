@@ -11,6 +11,9 @@ var userSchema = new mongoose.Schema({
   email: String
 });
 
+// add bcrypt hashing to model (works on a password field)!
+userSchema.plugin(require('mongoose-bcrypt'));
+
 // Create the model using your schema.
 var User = mongoose.model('User', userSchema);
 

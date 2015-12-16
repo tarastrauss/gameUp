@@ -1,16 +1,17 @@
 <script type="text/ng-template" id="loginModal.html">
   <div id="loginWhole" >
     <div class="modal-header">
-      <h4 class="modal-title" id="loginLabel">Login to <span class="play"><em>Inform</em></span></h4>
+      <h4 class="modal-title" id="loginLabel">Login to <span class="play"><em>GameUp</em></span></h4>
     </div>
     <div class="modal-body login-body">
-      <input ng-model="vm.username" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1"><br>
-      <input ng-model="vm.password" type="text" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
-    </div>
-    <div class="modal-footer" id="login-footer">
-      <button type="button" class="modal-btn btn btn-default" ng-click="cancel()">Close</button>
-      <button type="button" class="modal-btn btn btn-{{color}}" ng-click="ok()">Submit</button>
-
+      <form id="log" class="pure-form center" ng-submit="logInUser()">
+        <fieldset class="pure-group center">
+          <input ng-model="auth.email" type="email" class="email form-control" placeholder="Email" aria-describedby="basic-addon1"><br>
+          <input ng-model="auth.password" type="password" class="password form-control" placeholder="Password" aria-describedby="basic-addon1"><br>
+          <button type="button" class="modal-btn btn btn-default" ng-click="cancel()">Close</button>
+          <button type="submit" class="modal-btn btn btn-{{color}}" >Submit</button>
+        </fieldset>
+      </form>
     </div>
   </div>
 </script>
@@ -40,18 +41,14 @@
       <h4 class="modal-title" id="signUpLabel">Sign up for <span class="play"><em>GameUp</em></span></h4>
     </div>
     <div class="modal-body login-body">
-
-
-
       <form id="user" class="pure-form center" ng-submit="createUser()">
         <fieldset class="pure-group center">
           <input type="email"    ng-model="user.email"    class="email form-control" aria-describedby="basic-addon1" placeholder="email"><br>
           <input type="text"     ng-model="user.name"     class="name form-control" placeholder="Name"><br>
           <input type="password" ng-model="user.password" class="password form-control" placeholder="password"><br>
           <input type="date"     ng-model="user.dob"      class="dob form-control" placeholder=""></br>
-
-      <button type="button" class="modal-btn btn btn-default">Close</button>
-      <button type="submit" class="modal-btn btn btn-{{color}}" >Submit</button>
+          <button type="button" class="modal-btn btn btn-default">Close</button>
+          <button type="submit" class="modal-btn btn btn-{{color}}" >Submit</button>
         </fieldset>
       </form>
 
@@ -65,7 +62,7 @@
     </div>
     <div id="intro-buttons" ng-if="showLoginButtons"  class="fadeIn animated">
       <!-- <button id="login" ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" class="intro btn btn-default" >Login</button> -->
-      <span class="intro btn btn-default">  Login</span>
+      <span ng-click="openLogin()" class="intro btn btn-default">  Login</span>
       <!-- <span ng-show="session.isLoggedIn" ng-bind="'Hello ' + session.currentUser.name"></span> -->
       <!-- <button ng-show="session.isLoggedIn" ng-click="session.logout()">Logout</button> -->
       <!-- <span id="login" ng-click="openLogin()" class="intro btn btn-default"> Login </span> -->
