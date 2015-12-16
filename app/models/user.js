@@ -7,7 +7,7 @@ mongoose.Promise = Promise;
 var userSchema = new mongoose.Schema({
   name: String,
   dob: Date,
-  level: Number,
+  level: String,
   email: String
 });
 

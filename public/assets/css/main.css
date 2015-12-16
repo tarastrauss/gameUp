@@ -3373,7 +3373,7 @@ body {
  /* width: 480px;*/
   position: relative;
   padding: 20px;
-  background-color: rgba(240, 240, 240, 0.6);
+  background-color: #AC58FA;
 /*  margin: 3px;*/
   border-radius: 9px;
   color: rgba(0, 0, 0, 1);
@@ -3417,6 +3417,10 @@ body {
   /*vertical-align: bottom;*/
 }
 
+.center {
+  text-align: center;
+}
+
 .script {
   font-family: Rock Salt;
   font-size: 26px;
@@ -3442,6 +3446,7 @@ body {
 }
 #user {
   margin-top: -6px;
+  background-color: #BDBDBD;
 }
 
 #quoteContainer {
@@ -3483,6 +3488,9 @@ body {
 .intro {
   margin: 10px;
   box-shadow: 3px 3px 3px black;
+    background-color: #AC58FA;
+    border: 2px solid #AC58FA;
+
 }
 .modal-btn{
   box-shadow: 3px 3px 3px black;
@@ -3521,6 +3529,27 @@ body {
   margin: 0 auto;
     text-align: center;
 
+}
+
+.modal-footer{
+  width: 200px;
+  margin: 0 auto;
+
+}
+
+#reset {
+  margin-top: -10px;
+  margin-left: 15px;
+  background-color: #BDBDBD;
+}
+#level {
+  display: inline-block;
+}
+
+.center-btn {
+  text-align: center;
+  margin: 0 auto;
+  margin-right: 55px;
 }
 
 .text {

@@ -23,14 +23,15 @@ module.exports = function(app, errorHandler) {
         },
         app.get('secret-key'),
         {
-          expiresIn: 900 // short, so we can test better
+          expiresIn: 9000 // short, so we can test better
         }
       );
 
       res.json({
         success: true,
         message: 'Successfully generated token.',
-        token: token
+        token: token,
+        user: req.user
       });
   });
 

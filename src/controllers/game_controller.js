@@ -15,6 +15,7 @@
     vm.message = "fun";
 
     vm.user = userDataService;
+    vm.currentUser = vm.user.currentUser;
 
     vm.wonGame = function () {
       var modalInstance = $uibModal.open({
@@ -27,6 +28,7 @@
       });
 
       modalInstance.result.then(function () {
+        vm.user.updateLevel("2");
 
       }, function () {
         console.log('Modal dismissed at: ' + new Date());
@@ -34,11 +36,11 @@
 
     }
 
-    if (vm.user.level === 1) {
+    if (vm.currentUser.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
       vm.turn = true;
-      vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+      vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
           if (vm.turn) {
@@ -50,6 +52,9 @@
           }
         }
         vm.checkForWinner();
+      }
+      vm.reset = function (){
+        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
       }
       vm.checkForWinner = function () {
         vm.box.forEach(function(singleBox, index) {
@@ -77,7 +82,7 @@
           }
         });
         if (vm.gameOneWon) {
-          vm.wonGame();
+          vm.wonGame("2");
         }
       }
     }

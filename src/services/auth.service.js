@@ -14,9 +14,10 @@
       logIn:      logIn,
       logOut:     logOut,
       clear:      clear,
-      isLoggedIn: (tokenService.get() !== null)
+      isLoggedIn: (tokenService.get() !== null),
+      currentUser: currentUser
     };
-
+    var currentUser;
 
 
     return auth;
@@ -36,6 +37,7 @@
         tokenService.set(data.data.token)
         auth.isLoggedIn = true;
         // userDataService.currentUserData();
+        currentUser = data.user;
         return data;
       });
     }

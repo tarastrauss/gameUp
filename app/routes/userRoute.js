@@ -20,7 +20,7 @@ module.exports = function(app, errorHandler) {
         name:     req.body.name,
         password: req.body.password,
         dob:      Date.parse(req.body.dob),
-        level:    1
+        level:    "1"
       }).then(function(newUser) {
         res.json({
           success: true,
@@ -34,6 +34,10 @@ module.exports = function(app, errorHandler) {
         next(err);
       });
   });
+
+
+
+
 
   // *** VALIDATIONS ***
 

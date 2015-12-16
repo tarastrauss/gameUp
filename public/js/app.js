@@ -537,6 +537,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     vm.message = "fun";
 
     vm.user = userDataService;
+    vm.currentUser = vm.user.currentUser;
 
     vm.wonGame = function () {
       var modalInstance = $uibModal.open({
@@ -549,6 +550,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       });
 
       modalInstance.result.then(function () {
+        vm.user.updateLevel("2");
 
       }, function () {
         console.log('Modal dismissed at: ' + new Date());
@@ -556,11 +558,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
     }
 
-    if (vm.user.level === 1) {
+    if (vm.currentUser.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
       vm.turn = true;
-      vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+      vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
           if (vm.turn) {
@@ -572,6 +574,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           }
         }
         vm.checkForWinner();
+      }
+      vm.reset = function (){
+        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
       }
       vm.checkForWinner = function () {
         vm.box.forEach(function(singleBox, index) {
@@ -599,7 +604,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           }
         });
         if (vm.gameOneWon) {
-          vm.wonGame();
+          vm.wonGame("2");
         }
       }
     }
@@ -822,7 +827,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         .then(function(data, status, headers, config) {
           $log.debug("Success:", data,status,headers,config)
 
-          $scope.successMessage = angular.toJson(data.data);
+          // $scope.successMessage = angular.toJson(data.data);
           $scope.failureMessage = "Present any error messages here.";
           // $scope.user.clear();
           $uibModalInstance.close();
@@ -839,6 +844,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       };
 
       $scope.logInUser = function() {
+        $scope.auth.email = $scope.user.email;
+        $scope.auth.password = $scope.user.password;
         $scope.auth.logIn()
 
           .then(function(data) {
@@ -897,9 +904,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       logIn:      logIn,
       logOut:     logOut,
       clear:      clear,
-      isLoggedIn: (tokenService.get() !== null)
+      isLoggedIn: (tokenService.get() !== null),
+      currentUser: currentUser
     };
-
+    var currentUser;
 
 
     return auth;
@@ -919,6 +927,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         tokenService.set(data.data.token)
         auth.isLoggedIn = true;
         // userDataService.currentUserData();
+        currentUser = data.user;
         return data;
       });
     }
@@ -1018,11 +1027,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       name:            "",
       password:        "",
       dob:             new Date(1990, 10, 1),
-      level:           1,
       create:          create,
       clear:           clear,
       currentUserData: currentUserData,
-      currentUser: currentUser
+      currentUser:     currentUser,
+      updateLevel:     updateLevel
     };
 
     return user;
@@ -1038,9 +1047,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           email:    user.email,
           name:     user.name,
           password: user.password,
-          level:    1,
+          level:    "1",
           dob:      user.dob.toISOString()
         })
+      }).then(function() {
+          currentUserData();
+      });
+    }
+
+    function updateLevel(newLevel) {
+      $log.debug("Attempting to update the level of :", currentUser.name);
+
+      return $http({
+        url:     "http://localhost:3000/api/me",
+        method:  "POST",
+        headers: {"Content-Type": "application/json"},
+        data: angular.toJson({
+          level: newLevel
+        })
+      }).then(function() {
+          currentUserData();
+          // clear();
       });
     }
 
@@ -1053,7 +1080,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       user.dob      = "";
     }
 
-    var currentUser = "";
+    var currentUser;
 
     function currentUserData() {
       $log.debug("Retrieving current user data.");

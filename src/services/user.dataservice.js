@@ -13,11 +13,11 @@
       name:            "",
       password:        "",
       dob:             new Date(1990, 10, 1),
-      level:           1,
       create:          create,
       clear:           clear,
       currentUserData: currentUserData,
-      currentUser: currentUser
+      currentUser:     currentUser,
+      updateLevel:     updateLevel
     };
 
     return user;
@@ -33,9 +33,27 @@
           email:    user.email,
           name:     user.name,
           password: user.password,
-          level:    1,
+          level:    "1",
           dob:      user.dob.toISOString()
         })
+      }).then(function() {
+          currentUserData();
+      });
+    }
+
+    function updateLevel(newLevel) {
+      $log.debug("Attempting to update the level of :", currentUser.name);
+
+      return $http({
+        url:     "http://localhost:3000/api/me",
+        method:  "POST",
+        headers: {"Content-Type": "application/json"},
+        data: angular.toJson({
+          level: newLevel
+        })
+      }).then(function() {
+          currentUserData();
+          // clear();
       });
     }
 
@@ -48,7 +66,7 @@
       user.dob      = "";
     }
 
-    var currentUser = "";
+    var currentUser;
 
     function currentUserData() {
       $log.debug("Retrieving current user data.");

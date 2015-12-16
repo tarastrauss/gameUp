@@ -31,6 +31,36 @@ module.exports = function(app, errorHandler) {
       })
   });
 
+  app.post('/api/me',
+    checkForToken,
+    validateToken,
+
+    function(req, res, next) {
+      User.findOne({email: req.decoded.email}, function(err, currentUser) {
+          currentUser.level = req.body.level;
+          currentUser.save(function(err){
+            res.json({
+              success: true,
+              message: 'Successfully updated user level.',
+              data: currentUser.level
+            });
+          });
+
+      // User.findById(req.user.id).exec()
+      //   .then(function(user) {
+      //     user.level = req.body.level;
+      //     user.save(function(err){
+      //       res.json({
+      //         success: true,
+      //         message: 'Successfully updated user level.',
+      //         data: user.level
+      //       });
+      //     });
+      //   });
+    });
+  });
+
+
   // *** VALIDATIONS ***
 
   function checkForToken(req, res, next) {

@@ -118,7 +118,7 @@
         .then(function(data, status, headers, config) {
           $log.debug("Success:", data,status,headers,config)
 
-          $scope.successMessage = angular.toJson(data.data);
+          // $scope.successMessage = angular.toJson(data.data);
           $scope.failureMessage = "Present any error messages here.";
           // $scope.user.clear();
           $uibModalInstance.close();
@@ -135,6 +135,8 @@
       };
 
       $scope.logInUser = function() {
+        $scope.auth.email = $scope.user.email;
+        $scope.auth.password = $scope.user.password;
         $scope.auth.logIn()
 
           .then(function(data) {
