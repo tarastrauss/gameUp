@@ -16,6 +16,12 @@
     vm.successMessage = "Present all of the current user's data here.";
     vm.failureMessage = "Present any error messages here.";
 
+    vm.currentUser = userDataService.currentUser;
+
+    vm.updateUser = function () {
+        vm.currentUser = userDataService.currentUser;
+    }
+
     // vm.createUser = function() {
     //   $log.log('creating user!');
     //   vm.user.create()

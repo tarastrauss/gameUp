@@ -42,7 +42,7 @@ module.exports = function(app, errorHandler) {
             res.json({
               success: true,
               message: 'Successfully updated user level.',
-              data: currentUser.level
+              data: currentUser
             });
           });
 

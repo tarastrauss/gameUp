@@ -122,8 +122,10 @@
           $scope.failureMessage = "Present any error messages here.";
           // $scope.user.clear();
           $uibModalInstance.close();
-          $state.go('gamePage');
+          $scope.auth.email = $scope.user.email;
+          $scope.auth.password = $scope.user.password;
           $scope.logInUser();
+          $state.go('gamePage');
         })
 
         .catch(function(data, status, headers, config) {
@@ -135,8 +137,7 @@
       };
 
       $scope.logInUser = function() {
-        $scope.auth.email = $scope.user.email;
-        $scope.auth.password = $scope.user.password;
+
         $scope.auth.logIn()
 
           .then(function(data) {

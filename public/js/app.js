@@ -528,18 +528,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       .controller("GameController", GameController);
       // .config(specificGameRoutes);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal'];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q'];
   // specificGameRoutes.$inject = ["$stateProvder"];
 
-  function GameController($log, userDataService, $location, $uibModal) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q) {
     var vm = this;
 
     vm.message = "fun";
 
     vm.user = userDataService;
-    vm.currentUser = vm.user.currentUser;
+    vm.auth = authService;
+    vm.currentUser = userDataService.currentUser;
 
-    vm.wonGame = function () {
+    vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'wonGame.html',
@@ -550,10 +551,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       });
 
       modalInstance.result.then(function () {
-        vm.user.updateLevel("2");
-
-      }, function () {
+        vm.user.updateLevel(level);
+      }).then(function () {
         console.log('Modal dismissed at: ' + new Date());
+        userDataService.currentUserData();
+      }).then(function() {
+        vm.currentUser = userDataService.currentUser;
+        $log.log('you won the game and the user in the game controller is now', vm.currentUser);
       });
 
     }
@@ -561,19 +565,34 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     if (vm.currentUser.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
-      vm.turn = true;
+      // vm.turn = true;
       vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+      var computerDone;
+      var computerMove;
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
-          if (vm.turn) {
+          // if (vm.turn) {
             vm.box[num] = "X";
-            vm.turn = false;
-          } else {
-            vm.box[num] = "O";
-            vm.turn = true;
-          }
+            // vm.turn = false;
+          // } else {
+            computerTurn();
+            // vm.box[num] = "O";
+            // vm.turn = true;
+          // }
         }
         vm.checkForWinner();
+      }
+
+      var computerTurn = function() {
+        computerDone = false;
+        do {
+          computerMove = Math.floor(Math.random() * 9);
+          if (vm.box[computerMove] == " ") {
+            vm.box[computerMove] = "O";
+            computerDone = true;
+            // vm.turn = true;
+          }
+        } while (!computerDone)
       }
       vm.reset = function (){
         vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
@@ -656,6 +675,12 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
     vm.successMessage = "Present all of the current user's data here.";
     vm.failureMessage = "Present any error messages here.";
+
+    vm.currentUser = userDataService.currentUser;
+
+    vm.updateUser = function () {
+        vm.currentUser = userDataService.currentUser;
+    }
 
     // vm.createUser = function() {
     //   $log.log('creating user!');
@@ -831,8 +856,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           $scope.failureMessage = "Present any error messages here.";
           // $scope.user.clear();
           $uibModalInstance.close();
-          $state.go('gamePage');
+          $scope.auth.email = $scope.user.email;
+          $scope.auth.password = $scope.user.password;
           $scope.logInUser();
+          $state.go('gamePage');
         })
 
         .catch(function(data, status, headers, config) {
@@ -844,8 +871,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       };
 
       $scope.logInUser = function() {
-        $scope.auth.email = $scope.user.email;
-        $scope.auth.password = $scope.user.password;
+
         $scope.auth.logIn()
 
           .then(function(data) {
@@ -927,21 +953,29 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         tokenService.set(data.data.token)
         auth.isLoggedIn = true;
         // userDataService.currentUserData();
-        currentUser = data.user;
+        currentUser = data.data.user;
+        userDataService.currentUser = data.data.user;
+        $log.log('after logging in, the current user is: ', currentUser);
         return data;
       });
     }
+
+    // function currentUser() {
+    //   return current;
+    // }
 
     function logOut() {
       tokenService.clear();
       auth.isLoggedIn = false;
       $log.log('logged out!');
       $state.go('landingPage');
+      userDataService.currentUser = "";
     }
 
     function clear() {
       auth.email    = "";
       auth.password = "";
+
     }
   }
 
@@ -1033,6 +1067,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       currentUser:     currentUser,
       updateLevel:     updateLevel
     };
+    var currentUser;
 
     return user;
 
@@ -1068,6 +1103,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       }).then(function() {
           currentUserData();
           // clear();
+          $log.log('the updated data is', data.data);
+          // authService.currentUser = data.data;
       });
     }
 
@@ -1080,7 +1117,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       user.dob      = "";
     }
 
-    var currentUser;
+
 
     function currentUserData() {
       $log.debug("Retrieving current user data.");
@@ -1091,6 +1128,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       }).then(function(data) {
         // $log.log('data is', data.data.data);
         currentUser = data.data.data;
+        // authService.currentUser = data.data.data;
         $log.log('user is', currentUser);
         return currentUser;
       });

@@ -6,18 +6,19 @@
       .controller("GameController", GameController);
       // .config(specificGameRoutes);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal'];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q'];
   // specificGameRoutes.$inject = ["$stateProvder"];
 
-  function GameController($log, userDataService, $location, $uibModal) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q) {
     var vm = this;
 
     vm.message = "fun";
 
     vm.user = userDataService;
-    vm.currentUser = vm.user.currentUser;
+    vm.auth = authService;
+    vm.currentUser = userDataService.currentUser;
 
-    vm.wonGame = function () {
+    vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'wonGame.html',
@@ -28,10 +29,13 @@
       });
 
       modalInstance.result.then(function () {
-        vm.user.updateLevel("2");
-
-      }, function () {
+        vm.user.updateLevel(level);
+      }).then(function () {
         console.log('Modal dismissed at: ' + new Date());
+        userDataService.currentUserData();
+      }).then(function() {
+        vm.currentUser = userDataService.currentUser;
+        $log.log('you won the game and the user in the game controller is now', vm.currentUser);
       });
 
     }
@@ -39,19 +43,34 @@
     if (vm.currentUser.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
-      vm.turn = true;
+      // vm.turn = true;
       vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+      var computerDone;
+      var computerMove;
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
-          if (vm.turn) {
+          // if (vm.turn) {
             vm.box[num] = "X";
-            vm.turn = false;
-          } else {
-            vm.box[num] = "O";
-            vm.turn = true;
-          }
+            // vm.turn = false;
+          // } else {
+            computerTurn();
+            // vm.box[num] = "O";
+            // vm.turn = true;
+          // }
         }
         vm.checkForWinner();
+      }
+
+      var computerTurn = function() {
+        computerDone = false;
+        do {
+          computerMove = Math.floor(Math.random() * 9);
+          if (vm.box[computerMove] == " ") {
+            vm.box[computerMove] = "O";
+            computerDone = true;
+            // vm.turn = true;
+          }
+        } while (!computerDone)
       }
       vm.reset = function (){
         vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]

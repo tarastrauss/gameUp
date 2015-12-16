@@ -7,21 +7,21 @@
       <div class="text"> Try your next challenge! </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="modal-btn btn btn-{{color}} center-btn" ng-click="ok()">Next</button>
+      <button type="button" class="modal-btn btn btn-{{color}} center-btn" ng-click="ok(); mc.updateUser()">Next</button>
     </div>
   </div>
 </script>
 
 
 
-<div class="container" id="game" ng-controller="GameController as vm">
+<div class="container" id="game" ng-cloak ng-controller="GameController as vm">
   <h2 id ="level"> Level {{vm.currentUser.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn btn-default" ng-click="vm.reset()"> Try Again </button>
   <div id="gameView">
 
  <!--      <div ui-view="specificGame" layout-fill>
       PAGE TEMPLATES INSERT HERE
       </div> -->
-    <div id="game1" ng-if="vm.currentUser.level==='1'">
+    <div id="game1" ng-if="vm.currentUser.level=='1'">
       <div class="game1-row">
         <div ng-click="vm.addTurn(0)" class="game1-col script" id="game1-1">{{vm.box[0]}}
         </div>

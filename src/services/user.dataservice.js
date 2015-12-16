@@ -19,6 +19,7 @@
       currentUser:     currentUser,
       updateLevel:     updateLevel
     };
+    var currentUser;
 
     return user;
 
@@ -54,6 +55,8 @@
       }).then(function() {
           currentUserData();
           // clear();
+          $log.log('the updated data is', data.data);
+          // authService.currentUser = data.data;
       });
     }
 
@@ -66,7 +69,7 @@
       user.dob      = "";
     }
 
-    var currentUser;
+
 
     function currentUserData() {
       $log.debug("Retrieving current user data.");
@@ -77,6 +80,7 @@
       }).then(function(data) {
         // $log.log('data is', data.data.data);
         currentUser = data.data.data;
+        // authService.currentUser = data.data.data;
         $log.log('user is', currentUser);
         return currentUser;
       });
