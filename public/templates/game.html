@@ -15,13 +15,13 @@
 
 
 <div class="container" id="game" ng-cloak ng-controller="GameController as vm" ng-init="vm.loadData()">
-  <h2 id ="level"> Level {{vm.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn modal-btn btn-default" ng-click="vm.reset()"> Try Again </button>
+  <h2 id ="level"> Level {{vm.user.currentUser.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn modal-btn btn-default" ng-click="vm.reset()"> Try Again </button>
   <div id="gameView">
 
  <!--      <div ui-view="specificGame" layout-fill>
       PAGE TEMPLATES INSERT HERE
       </div> -->
-    <div id="game1" ng-if="vm.level=='1'">
+    <div id="game1" ng-if="vm.user.currentUser.level=='1'">
       <div class="game1-row">
         <div ng-click="vm.addTurn(0)" class="game1-col script" id="game1-1">{{vm.box[0]}}
         </div>
@@ -49,11 +49,54 @@
 
     </div>
 
-
-    <div id="game2" ng-if="vm.level=='2'">
+    <div id="game2" ng-if="vm.user.currentUser.level =='2'">
       <div class="instructions text">
-        To play this game, decode the letters below to discover a secret message! Each letter represents a different letter
-          of the alphabet in the message.
+        The modern classic! Each 2 x 2 of boxes contains the numbers 1 - 4. Each series of 4 boxes
+        vertically and horizontally will contain the numbers 1-4. Figure out the patern to win the game! Select the
+        number you wish to guess.
+      </div>
+      <div id = "numbers">
+        <div ng-click="vm.selectedNumber = 1" ng-class="{'active-num': vm.selectedNumber == 1}" class="number btn"> 1 </div>
+        <div ng-click="vm.selectedNumber = 2" ng-class="{'active-num': vm.selectedNumber == 2}" class="number btn"> 2 </div>
+        <div ng-click="vm.selectedNumber = 3" ng-class="{'active-num': vm.selectedNumber == 3}" class="number btn"> 3 </div>
+        <div ng-click="vm.selectedNumber = 4" ng-class="{'active-num': vm.selectedNumber == 4}" class="number btn"> 4 </div>
+      </div>
+
+      <div id="sudoku-try" ng-show="vm.tryAgain" class="text">Keep trying!</div>
+      <div id="sudoku-board">
+        <div class="sudoku-row">
+          <div ng-model="vm.box[0]" ng-class="{'set-num': vm.setBox[0]==='true'}" ng-click="vm.box[0] = vm.selectedNumber" class="sudoku-box">{{vm.box[0]}}</div>
+          <div ng-model="vm.box[1]" ng-class="{'set-num': vm.setBox[1]==='true'}" ng-click="vm.box[1] = vm.selectedNumber" class="sudoku-box">{{vm.box[1]}}</div>
+          <div ng-model="vm.box[2]" ng-class="{'set-num': vm.setBox[2]==='true'}" ng-click="vm.box[2] = vm.selectedNumber" class="sudoku-box">{{vm.box[2]}}</div>
+          <div ng-model="vm.box[3]" ng-class="{'set-num': vm.setBox[3]==='true'}" ng-click="vm.box[3] = vm.selectedNumber" class="sudoku-box">{{vm.box[3]}}</div>
+        </div>
+        <div class="sudoku-row">
+          <div ng-model="vm.box[4]" ng-class="{'set-num': vm.setBox[4]==='true'}" ng-click="vm.box[4] = vm.selectedNumber" class="sudoku-box">{{vm.box[4]}}</div>
+          <div ng-model="vm.box[5]" ng-class="{'set-num': vm.setBox[5]==='true'}" ng-click="vm.box[5] = vm.selectedNumber" class="sudoku-box">{{vm.box[5]}}</div>
+          <div ng-model="vm.box[6]" ng-class="{'set-num': vm.setBox[6]==='true'}" ng-click="vm.box[6] = vm.selectedNumber" class="sudoku-box">{{vm.box[6]}}</div>
+          <div ng-model="vm.box[7]" ng-class="{'set-num': vm.setBox[7]==='true'}" ng-click="vm.box[7] = vm.selectedNumber" class="sudoku-box">{{vm.box[7]}}</div>
+        </div>
+        <div class="sudoku-row">
+          <div ng-model="vm.box[8]" ng-class="{'set-num': vm.setBox[8]==='true'}" ng-click="vm.box[8]= vm.selectedNumber" class="sudoku-box">{{vm.box[8]}}</div>
+          <div ng-model="vm.box[9]" ng-class="{'set-num': vm.setBox[9]==='true'}" ng-click="vm.box[9]= vm.selectedNumber" class="sudoku-box">{{vm.box[9]}}</div>
+          <div ng-model="vm.box[10]" ng-class="{'set-num': vm.setBox[10]==='true'}" ng-click="vm.box[10] = vm.selectedNumber" class="sudoku-box">{{vm.box[10]}}</div>
+          <div ng-model="vm.box[11]" ng-class="{'set-num': vm.setBox[11]==='true'}" ng-click="vm.box[11] = vm.selectedNumber" class="sudoku-box">{{vm.box[11]}}</div>
+        </div>
+        <div class="sudoku-row">
+          <div ng-model="vm.box[12]" ng-class="{'set-num': vm.setBox[12]==='true'}" ng-click="vm.box[12] = vm.selectedNumber" class="sudoku-box">{{vm.box[12]}}</div>
+          <div ng-model="vm.box[13]" ng-class="{'set-num': vm.setBox[13]==='true'}" ng-click="vm.box[13] = vm.selectedNumber" class="sudoku-box">{{vm.box[13]}}</div>
+          <div ng-model="vm.box[14]" ng-class="{'set-num': vm.setBox[14]==='true'}" ng-click="vm.box[14] = vm.selectedNumber" class="sudoku-box">{{vm.box[14]}}</div>
+          <div ng-model="vm.box[15]" ng-class="{'set-num': vm.setBox[15]==='true'}" ng-click="vm.box[15] = vm.selectedNumber" class="sudoku-box">{{vm.box[15]}}</div>
+        </div>
+      </div>
+      <button type="button" id="sudoku-submit" ng-click="vm.checkWin()" class="btn btn-default"> Submit </button>
+    </div>
+
+
+    <div id="game3" ng-if="vm.user.currentUser.level=='3'">
+      <div class="instructions text">
+        The alphabet has been scrambled! To play this game, decode the letters below to discover a secret message!
+        Letters that appear more than once in the message will be represented by the same letter!
       </div>
         <div id ="decode-answer"> {{vm.showAnswer}}!</div>
         <div id = "user-code" class = "text">
@@ -66,9 +109,25 @@
               <button type="submit" id="submit-code" class="modal-btn btn">Submit</button>
             </fieldset>
           </form>
-  {{vm.userAnswer}}
+          <div id="try-again" class="text" ng-if="vm.tryAgain"> Keep trying! </div>
         </div>
     </div>
+
+    <div id="game4" ng-if="vm.user.currentUser.level=='4'">
+      <div class="instructions text">
+        The object of the game is to move all the disks onto a different pole. You can only move one disk at a time
+        and you must follow size order -- a bigger disk can't go on a smaller disk.
+      </div>
+      <div id="pole1" class="pole">
+      </div>
+      <div id="pole1" class="pole">      </div>
+        <div id ="disk1" class="disk"><div>
+        <div id ="disk2" class="disk"><div>
+        <div id ="disk3" class="disk"><div>
+
+
+      <div id="pole1" class="pole">
+      </div>
 
 
 

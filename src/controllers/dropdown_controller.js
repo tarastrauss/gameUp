@@ -36,16 +36,11 @@
     dd.loadData = function () {
       userDataService.currentUserData()
       .then(function() {
-
         dd.currentUser = userDataService.currentUser;
       });
     }
 
-    userDataService.currentUserData()
-      .then(function() {
-
-        dd.currentUser = userDataService.currentUser;
-      });
+    dd.loadData();
 
   };
 
