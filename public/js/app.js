@@ -980,7 +980,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       $log.debug("Logging in with credentials:", {email: auth.email, password: auth.password});
 
       return $http({
-        url:     "http://localhost:3000/api/token",
+        url:     "/api/token",
         method:  "POST",
         headers: {"Content-Type": "application/json"},
         data: angular.toJson({
