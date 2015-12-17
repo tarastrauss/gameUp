@@ -435,6 +435,22 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
   "use strict";
 
   angular
+    .module("gameUpApp")
+    .config(configure);
+
+  configure.$inject = ["$httpProvider"];
+
+  function configure($httpProvider) {
+    // console.log("Adding tokenSigningService interceptor.");
+    $httpProvider.interceptors.push("tokenSigningService");
+  }
+
+})();
+
+(function() {
+  "use strict";
+
+  angular
       .module("gameUpApp")
       .controller('DropdownController', DropdownController);
 
@@ -1093,7 +1109,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       $log.debug("Attempting to create:", user);
 
       return $http({
-        url:     "http://localhost:3000/api/users",
+        url:     "/api/users",
         method:  "POST",
         headers: {"Content-Type": "application/json"},
         data: angular.toJson({
@@ -1112,7 +1128,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       $log.debug("Attempting to update the level of :", user.currentUser.name);
 
       return $http({
-        url:     "http://localhost:3000/api/me",
+        url:     "/api/me",
         method:  "POST",
         headers: {"Content-Type": "application/json"},
         data: angular.toJson({
@@ -1137,7 +1153,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     function currentUserData() {
       $log.debug("Retrieving current user data.");
       return $http({
-        url:     "http://localhost:3000/api/me",
+        url:     "/api/me",
         method:  "GET"
       }).then(function(data) {
         user.currentUser = data.data.data;
@@ -1145,22 +1161,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         return user.currentUser;
       });
     }
-  }
-
-})();
-
-(function() {
-  "use strict";
-
-  angular
-    .module("gameUpApp")
-    .config(configure);
-
-  configure.$inject = ["$httpProvider"];
-
-  function configure($httpProvider) {
-    // console.log("Adding tokenSigningService interceptor.");
-    $httpProvider.interceptors.push("tokenSigningService");
   }
 
 })();

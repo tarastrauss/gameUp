@@ -26,7 +26,7 @@
       $log.debug("Attempting to create:", user);
 
       return $http({
-        url:     "http://localhost:3000/api/users",
+        url:     "/api/users",
         method:  "POST",
         headers: {"Content-Type": "application/json"},
         data: angular.toJson({
@@ -45,7 +45,7 @@
       $log.debug("Attempting to update the level of :", user.currentUser.name);
 
       return $http({
-        url:     "http://localhost:3000/api/me",
+        url:     "/api/me",
         method:  "POST",
         headers: {"Content-Type": "application/json"},
         data: angular.toJson({
@@ -70,7 +70,7 @@
     function currentUserData() {
       $log.debug("Retrieving current user data.");
       return $http({
-        url:     "http://localhost:3000/api/me",
+        url:     "/api/me",
         method:  "GET"
       }).then(function(data) {
         user.currentUser = data.data.data;
