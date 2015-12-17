@@ -18,32 +18,29 @@
   <h2 id ="level" ng-cloak > Level {{vm.user.currentUser.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn modal-btn btn-default" ng-click="vm.reset()"> Try Again </button>
   <div id="gameView">
 
- <!--      <div ui-view="specificGame" layout-fill>
-      PAGE TEMPLATES INSERT HERE
-      </div> -->
     <div id="game1" ng-cloak ng-if="vm.user.currentUser.level=='1'">
       <div class="game1-row">
-        <div ng-click="vm.addTurn(0)" class="game1-col script" id="game1-1">{{vm.box[0]}}
+        <div ng-click="vm.addTurn(0)" ng-class="{'animated flipInX': vm.box[0] !== ' '}" class="game1-col script" id="game1-1">{{vm.box[0]}}
         </div>
-        <div ng-click="vm.addTurn(1)" class="game1-col script" id="game1-2">{{vm.box[1]}}
+        <div ng-click="vm.addTurn(1)" ng-class="{'animated flipInX': vm.box[1] !== ' '}" class="game1-col script" id="game1-2">{{vm.box[1]}}
         </div>
-        <div ng-click="vm.addTurn(2)" class="game1-col script" id="game1-3">{{vm.box[2]}}
-        </div>
-      </div>
-       <div class="game1-row">
-        <div ng-click="vm.addTurn(3)" class="game1-col script" id="game1-4">{{vm.box[3]}}
-        </div>
-        <div ng-click="vm.addTurn(4)" class="game1-col script" id="game1-5">{{vm.box[4]}}
-        </div>
-        <div ng-click="vm.addTurn(5)" class="game1-col script" id="game1-6">{{vm.box[5]}}
+        <div ng-click="vm.addTurn(2)" ng-class="{'animated flipInX': vm.box[2] !== ' '}" class="game1-col script" id="game1-3">{{vm.box[2]}}
         </div>
       </div>
        <div class="game1-row">
-        <div ng-click="vm.addTurn(6)" class="game1-col script" id="game1-7">{{vm.box[6]}}
+        <div ng-click="vm.addTurn(3)" ng-class="{'animated flipInX': vm.box[3] !== ' '}" class="game1-col script" id="game1-4">{{vm.box[3]}}
         </div>
-        <div ng-click="vm.addTurn(7)" class="game1-col script" id="game1-8">{{vm.box[7]}}
+        <div ng-click="vm.addTurn(4)" ng-class="{'animated flipInX': vm.box[4] !== ' '}" class="game1-col script" id="game1-5">{{vm.box[4]}}
         </div>
-        <div ng-click="vm.addTurn(8)" class="game1-col script" id="game1-9">{{vm.box[8]}}
+        <div ng-click="vm.addTurn(5)" ng-class="{'animated flipInX': vm.box[5] !== ' '}" class="game1-col script" id="game1-6">{{vm.box[5]}}
+        </div>
+      </div>
+       <div class="game1-row">
+        <div ng-click="vm.addTurn(6)" ng-class="{'animated flipInX': vm.box[6] !== ' '}" class="game1-col script" id="game1-7">{{vm.box[6]}}
+        </div>
+        <div ng-click="vm.addTurn(7)" ng-class="{'animated flipInX': vm.box[7] !== ' '}" class="game1-col script" id="game1-8">{{vm.box[7]}}
+        </div>
+        <div ng-click="vm.addTurn(8)" ng-class="{'animated flipInX': vm.box[8] !== ' '}" class="game1-col script" id="game1-9">{{vm.box[8]}}
         </div>
       </div>
 

@@ -141,7 +141,8 @@
     vm.game3 = function() {
      // if (vm.level == '2') {
         $log.log('user is in level 3!');
-        vm.gameName = "Decoder";
+        vm.gameName = "Cryptogram";
+        vm.tryAgain = false;
         var answer = "WDI graduates will ALL get great jobs";
         var originalAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         // var code = Math.floor((Math.random() * 7) + 1);

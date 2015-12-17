@@ -25,7 +25,7 @@
     <div class="modal-body">
       <p class="text"><span class="play">GameUp</span> is a gaming platform where users can play puzzles and games to
         unlock new levels of puzzles and games! </p>
-      <p class="text">GameUp LEVEL.</p>
+      <p class="text"> Your GameUp LEVEL will appear in the top left corner of the screen.</p>
       <p class="text"> Beat each game unlock a the next level and gain access to a new game. </p>
     </div>
     <div class="modal-footer" id="started-footer">
@@ -47,7 +47,7 @@
           <input type="text"     ng-model="user.name"     class="name form-control" placeholder="Name"><br>
           <input type="password" ng-model="user.password" class="password form-control" placeholder="password"><br>
           <input type="date"     ng-model="user.dob"      class="dob form-control" placeholder=""></br>
-          <button type="button" class="modal-btn btn btn-default">Close</button>
+          <button type="button" class="modal-btn btn btn-default" ng-click="cancel()">Close</button>
           <button type="submit" class="modal-btn btn btn-{{color}}" >Submit</button>
         </fieldset>
       </form>
@@ -58,14 +58,10 @@
 <div class="container-fluid" id="landing" ng-controller="ModalController">
   <div class="container" id="landing-mid">
     <div id="quoteContainer" class="animated fadeInDown">
-      <div id="quote" class="play"> GameUp </div>
+      <div id="quote" class="play"><strong> GameUp</strong> </div>
     </div>
     <div id="intro-buttons" ng-if="showLoginButtons"  class="fadeIn animated">
-      <!-- <button id="login" ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" class="intro btn btn-default" >Login</button> -->
       <span ng-click="openLogin()" class="intro btn btn-default">  Login</span>
-      <!-- <span ng-show="session.isLoggedIn" ng-bind="'Hello ' + session.currentUser.name"></span> -->
-      <!-- <button ng-show="session.isLoggedIn" ng-click="session.logout()">Logout</button> -->
-      <!-- <span id="login" ng-click="openLogin()" class="intro btn btn-default"> Login </span> -->
       <span id="started" ng-click="openStarted()" class="intro btn btn-default" > Get Started </span>
     </div>
   </div>
