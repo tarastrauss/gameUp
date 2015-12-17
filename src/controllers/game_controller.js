@@ -5,9 +5,9 @@
       .module("gameUpApp")
       .controller("GameController", GameController);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout'];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout', '$state', '$scope'];
 
-  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout, $state, $scope) {
     var vm = this;
 
     vm.message = "fun";
@@ -20,43 +20,58 @@
     vm.loadData = function () {
       userDataService.currentUserData()
       .then(function() {
+        // vm.loadGame(vm.user.currentUser.level);
+       // $scope.$apply(function(){
+
+        if (vm.user.currentUser.level == '1') {
+          vm.game1();
+        } else if (vm.user.currentUser.level == '2') {
+          vm.game2();
+        } else if (vm.user.currentUser.level == '3') {
+          vm.game3();
+        }
         vm.currentUser = userDataService.currentUser;
-        vm.loadGame(vm.user.currentUser.level);
+       // });
+      // $scope.$apply();
+
       });
+
+      // return true;
       // vm.level       = vm.currentUser.level;
       // vm.level = 3;
       // vm.loadGame('3');
     }
 
-
     vm.loadGame = function(level) {
-      if (level === '1') {
+      if (level == '1') {
         vm.game1();
-      } else if (level === '2') {
+      } else if (level == '2') {
         vm.game2();
-      } else if (level === '3') {
+      } else if (level == '3') {
         vm.game3();
       }
     }
-
 
     vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'wonGame.html',
-        controller: ModalInstanceController,
-        resolve: {
+        controller: ModalInstanceController
+        // resolve:
+          // vm.loadGame(level)
 
-        }
+
       });
       modalInstance.result.then(function () {
         vm.user.updateLevel(level);
-      // }).then(function () {
-        // vm.level = level;
-        $log.log('and the other level is', level);
-        // vm.loadGame(level);
-        vm.loadData();
-      });
+      // // }).then(function () {
+      //   // vm.level = level;
+      //   $log.log('and the other level is', level);
+      // }).then(function(){
+        // vm.loadData();
+        vm.loadGame(level);
+        // $state.go('gamePage');
+      })
     }
 
     vm.game1 = function () {
@@ -70,7 +85,7 @@
           if (vm.box[num] === " ") {
               vm.box[num] = "X";
               vm.checkForWinner();
-              if (gameOneWon) {
+              if (!vm.gameOneWon) {
                 $timeout(function(){
                   computerTurn();
                  }, 700);
@@ -182,7 +197,9 @@
       }
 
       vm.game2 = function () {
+        $log.log('you are now in game 2!');
         vm.gameName = "Sudoku (4 x 4)";
+        // debugger;
         var win = false;
         vm.tryAgain = false;
         vm.box = [];

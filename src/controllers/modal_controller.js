@@ -99,8 +99,11 @@
             $uibModalInstance.close();
             $scope.auth.email = $scope.user.email;
             $scope.auth.password = $scope.user.password;
-            $scope.logInUser();
-            $state.go('gamePage');
+            $scope.logInUser()
+          })
+          .then(function(){
+
+            // $state.go('gamePage');
           })
           .catch(function(data, status, headers, config) {
             $log.debug("Failure:", data,status,headers,config)

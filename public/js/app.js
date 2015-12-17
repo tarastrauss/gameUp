@@ -416,26 +416,17 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           }
         },
         controller: "GameController",
-        controllerAs: "vm"
+        controllerAs: "vm",
+        resolve: {
+          userPrep: userPrep
+        }
       });
 
     $urlRouterProvider.otherwise("/");
   }
 
-})();
-
-(function() {
-  "use strict";
-
-  angular
-    .module("gameUpApp")
-    .config(configure);
-
-  configure.$inject = ["$httpProvider"];
-
-  function configure($httpProvider) {
-    // console.log("Adding tokenSigningService interceptor.");
-    $httpProvider.interceptors.push("tokenSigningService");
+  function userPrep(userDataService) {
+    userDataService.currentUserData();
   }
 
 })();
@@ -495,9 +486,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       .module("gameUpApp")
       .controller("GameController", GameController);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout'];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout', '$state', '$scope'];
 
-  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout, $state, $scope) {
     var vm = this;
 
     vm.message = "fun";
@@ -510,43 +501,58 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     vm.loadData = function () {
       userDataService.currentUserData()
       .then(function() {
+        // vm.loadGame(vm.user.currentUser.level);
+       // $scope.$apply(function(){
+
+        if (vm.user.currentUser.level == '1') {
+          vm.game1();
+        } else if (vm.user.currentUser.level == '2') {
+          vm.game2();
+        } else if (vm.user.currentUser.level == '3') {
+          vm.game3();
+        }
         vm.currentUser = userDataService.currentUser;
-        vm.loadGame(vm.user.currentUser.level);
+       // });
+      // $scope.$apply();
+
       });
+
+      // return true;
       // vm.level       = vm.currentUser.level;
       // vm.level = 3;
       // vm.loadGame('3');
     }
 
-
     vm.loadGame = function(level) {
-      if (level === '1') {
+      if (level == '1') {
         vm.game1();
-      } else if (level === '2') {
+      } else if (level == '2') {
         vm.game2();
-      } else if (level === '3') {
+      } else if (level == '3') {
         vm.game3();
       }
     }
-
 
     vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'wonGame.html',
-        controller: ModalInstanceController,
-        resolve: {
+        controller: ModalInstanceController
+        // resolve:
+          // vm.loadGame(level)
 
-        }
+
       });
       modalInstance.result.then(function () {
         vm.user.updateLevel(level);
-      // }).then(function () {
-        // vm.level = level;
-        $log.log('and the other level is', level);
-        // vm.loadGame(level);
-        vm.loadData();
-      });
+      // // }).then(function () {
+      //   // vm.level = level;
+      //   $log.log('and the other level is', level);
+      // }).then(function(){
+        // vm.loadData();
+        vm.loadGame(level);
+        // $state.go('gamePage');
+      })
     }
 
     vm.game1 = function () {
@@ -560,7 +566,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           if (vm.box[num] === " ") {
               vm.box[num] = "X";
               vm.checkForWinner();
-              if (gameOneWon) {
+              if (!vm.gameOneWon) {
                 $timeout(function(){
                   computerTurn();
                  }, 700);
@@ -672,7 +678,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       }
 
       vm.game2 = function () {
+        $log.log('you are now in game 2!');
         vm.gameName = "Sudoku (4 x 4)";
+        // debugger;
         var win = false;
         vm.tryAgain = false;
         vm.box = [];
@@ -877,8 +885,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             $uibModalInstance.close();
             $scope.auth.email = $scope.user.email;
             $scope.auth.password = $scope.user.password;
-            $scope.logInUser();
-            $state.go('gamePage');
+            $scope.logInUser()
+          })
+          .then(function(){
+
+            // $state.go('gamePage');
           })
           .catch(function(data, status, headers, config) {
             $log.debug("Failure:", data,status,headers,config)
@@ -1109,7 +1120,7 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         })
       }).then(function() {
           currentUserData();
-          $log.log('the updated data is', data.data);
+          // $log.log('the updated data is', data.data);
           // authService.currentUser = data.data;
       });
     }
@@ -1129,13 +1140,27 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         url:     "http://localhost:3000/api/me",
         method:  "GET"
       }).then(function(data) {
-        // $log.log('data is', data.data.data);
         user.currentUser = data.data.data;
-        // authService.currentUser = data.data.data;
         $log.log('user is', user.currentUser);
         return user.currentUser;
       });
     }
+  }
+
+})();
+
+(function() {
+  "use strict";
+
+  angular
+    .module("gameUpApp")
+    .config(configure);
+
+  configure.$inject = ["$httpProvider"];
+
+  function configure($httpProvider) {
+    // console.log("Adding tokenSigningService interceptor.");
+    $httpProvider.interceptors.push("tokenSigningService");
   }
 
 })();

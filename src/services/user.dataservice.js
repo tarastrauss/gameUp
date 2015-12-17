@@ -53,7 +53,7 @@
         })
       }).then(function() {
           currentUserData();
-          $log.log('the updated data is', data.data);
+          // $log.log('the updated data is', data.data);
           // authService.currentUser = data.data;
       });
     }
@@ -73,9 +73,7 @@
         url:     "http://localhost:3000/api/me",
         method:  "GET"
       }).then(function(data) {
-        // $log.log('data is', data.data.data);
         user.currentUser = data.data.data;
-        // authService.currentUser = data.data.data;
         $log.log('user is', user.currentUser);
         return user.currentUser;
       });

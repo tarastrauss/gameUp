@@ -34,10 +34,17 @@
           }
         },
         controller: "GameController",
-        controllerAs: "vm"
+        controllerAs: "vm",
+        resolve: {
+          userPrep: userPrep
+        }
       });
 
     $urlRouterProvider.otherwise("/");
+  }
+
+  function userPrep(userDataService) {
+    userDataService.currentUserData();
   }
 
 })();
