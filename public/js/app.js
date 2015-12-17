@@ -377,27 +377,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
 (function() {
   angular.module('gameUpApp', ["ui.router", "ngAnimate", "ui.bootstrap"]);
-    // .run(['$rootScope', '$window', 'sessionService', function ($rootScope, $window, sessionService) {
-    //   $rootScope.session = sessionService;
-    //   $window.app = {
-    //       authState: function(state, user) {
-    //           $rootScope.$apply(function() {
-    //               switch (state) {
-    //                   case 'success':
-    //                       sessionService.authSuccess(user);
-    //                       break;
-    //                   case 'failure':
-    //                       sessionService.authFailed();
-    //                       break;
-    //               }
-    //           });
-    //       }
-    //   };
-    //   // if ($window.user !== null) {
-    //   //     sessionService.authSuccess($window.user);
-    //   // }
-    // }]);
-
 
 })();
 
@@ -419,7 +398,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             templateUrl: "/templates/landing.html"
           }
         },
-        // templateUrl: "/templates/landing.html",
         controller: "MainController",
         controllerAs: "vm"
       })
@@ -437,7 +415,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             templateUrl: "/templates/game.html"
           }
         },
-        // templateUrl: "/templates/game.html",
         controller: "GameController",
         controllerAs: "vm"
       });
@@ -462,22 +439,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
   }
 
 })();
-
-// $(document).ready(function() {
-//   console.log('loaded!');
-//   // setTimeout(function() {
-//   //   $('#intro-buttons').append('<span id="login" class="intro btn btn-default fadeIn animated"> Login </span>');
-//   //    $('#intro-buttons').append('<span data-toggle="modal" data-target="#startedModal" class="intro btn btn-default fadeIn animated" id="started"> Get Started </span>');
-
-//   // }, 1100);
-
-
-
-// });
-//   // $('.content').on("click", "#login", function() {
-//   //   console.log("click");
-//   //   $(this).attr('ng-click', "openLogin()")
-//   // });
 
 (function() {
   "use strict";
@@ -514,7 +475,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       $scope.status.isopen = !$scope.status.isopen;
     };
 
-    dd.currentUser = userDataService.currentUser;
+    dd.loadData = function () {
+      userDataService.currentUserData()
+      .then(function() {
+
+        dd.currentUser = userDataService.currentUser;
+      });
+    }
+
+    userDataService.currentUserData()
+      .then(function() {
+
+        dd.currentUser = userDataService.currentUser;
+      });
 
   };
 
@@ -526,19 +499,24 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
   angular
       .module("gameUpApp")
       .controller("GameController", GameController);
-      // .config(specificGameRoutes);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q'];
-  // specificGameRoutes.$inject = ["$stateProvder"];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout'];
 
-  function GameController($log, userDataService, $location, $uibModal, authService, $q) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout) {
     var vm = this;
 
     vm.message = "fun";
 
+
     vm.user = userDataService;
     vm.auth = authService;
-    vm.currentUser = userDataService.currentUser;
+
+    vm.level = "2";
+    vm.loadData = function () {
+      vm.currentUser = userDataService.currentUser;
+
+      vm.level = userDataService.currentUser.level;
+    }
 
     vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
@@ -553,16 +531,13 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       modalInstance.result.then(function () {
         vm.user.updateLevel(level);
       }).then(function () {
-        console.log('Modal dismissed at: ' + new Date());
-        userDataService.currentUserData();
-      }).then(function() {
-        vm.currentUser = userDataService.currentUser;
-        $log.log('you won the game and the user in the game controller is now', vm.currentUser);
+        vm.level = level;
+        $log.log('the user level is ', vm.level, 'and the other level is', level);
       });
 
     }
 
-    if (vm.currentUser.level == '1') {
+    if (vm.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
       // vm.turn = true;
@@ -571,14 +546,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       var computerMove;
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
-          // if (vm.turn) {
             vm.box[num] = "X";
-            // vm.turn = false;
-          // } else {
-            computerTurn();
-            // vm.box[num] = "O";
-            // vm.turn = true;
-          // }
+            $timeout(function(){
+              computerTurn();
+             }, 1400);
         }
         vm.checkForWinner();
       }
@@ -595,11 +566,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         } while (!computerDone)
       }
       vm.reset = function (){
-        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
       }
       vm.checkForWinner = function () {
         vm.box.forEach(function(singleBox, index) {
-          if (singleBox !== " ") {
+          if (singleBox === "X") {
             if (index === 0 || index === 3 || index === 6) {
               if (singleBox === vm.box[index + 1] && singleBox === vm.box[index + 2]) {
                 vm.gameOneWon = true;
@@ -623,9 +594,59 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
           }
         });
         if (vm.gameOneWon) {
-          vm.wonGame("2");
+          vm.wonGame('2');
         }
       }
+    }
+
+    if (vm.level == '2') {
+      vm.gameWon = false;
+      vm.gameName = "Decoder";
+      var answer = "WDI graduates will ALL get great jobs";
+      var originalAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+      // var code = Math.floor((Math.random() * 7) + 1);
+      var shuffledAlphabet = originalAlphabet.slice();
+      var j;
+      var temp;
+      var codeAnswer = "";
+      function shuffleArray(alphabet) {
+        for (var i = 25; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            temp = alphabet[i];
+            alphabet[i] = alphabet[j];
+            alphabet[j] = temp;
+        }
+        return alphabet;
+      }
+      shuffledAlphabet = shuffleArray(shuffledAlphabet);
+
+      var alphaIndex;
+      for (var i = 0; i < answer.length; i++) {
+        if (answer[i] !== " ") {
+          alphaIndex = originalAlphabet.indexOf(answer[i].toUpperCase());
+          codeAnswer = codeAnswer + shuffledAlphabet[alphaIndex];
+        } else {
+          codeAnswer = codeAnswer + " ";
+        }
+      }
+      vm.showAnswer = codeAnswer;
+      vm.userAnswer = "";
+      for (var i = 0; i < codeAnswer.length; i++) {
+        vm.userAnswer = vm.userAnswer + " ";
+      }
+
+      $log.log('the original alphabet is ', originalAlphabet);
+      $log.log('the shuffled alphabet is ', shuffledAlphabet);
+      $log.log('the shuffled answer is ', codeAnswer);
+       $log.log('the user answer is ', vm.userAnswer);
+
+       vm.checkWinner = function () {
+          if (vm.userAnswer.toUpperCase() == vm.showAnswer) {
+            wonGame('3');
+          } else {
+            $log.log('you did not win');
+          }
+       }
     }
   }
 
@@ -645,8 +666,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
     $scope.ok = function () {
       $uibModalInstance.close();
-      // $state.go('gamePage');
-
     };
 
     $scope.cancel = function () {
@@ -682,52 +701,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         vm.currentUser = userDataService.currentUser;
     }
 
-    // vm.createUser = function() {
-    //   $log.log('creating user!');
-    //   vm.user.create()
-
-    //   .then(function(data, status, headers, config) {
-    //     $log.debug("Success:", data,status,headers,config)
-
-    //     vm.successMessage = angular.toJson(data.data);
-    //     vm.failureMessage = "Present any error messages here.";
-    //     vm.user.clear();
-    //     $state.go('gamePage')
-    //   })
-
-    //   .catch(function(data, status, headers, config) {
-    //     $log.debug("Failure:", data,status,headers,config)
-
-    //     vm.successMessage = "Present all of the current user's data here.";
-    //     vm.failureMessage = angular.toJson(data.data);
-    //   });
-    // };
-
-    // vm.logInUser = function() {
-    //   vm.auth.logIn()
-
-    //   .then(function(data) {
-    //     $log.debug("Success:", data)
-
-    //     return vm.user.currentUserData();
-    //   })
-
-    //   .then(function(data) {
-    //     $log.debug("Success:", data)
-
-    //     vm.auth.clear();
-
-    //     vm.successMessage = angular.toJson(data.data);
-    //     vm.failureMessage = "Present any error messages here.";
-    //   })
-
-    //   .catch(function(data, status, headers, config) {
-    //     $log.debug("Failure:", data, status, headers, config)
-
-    //     vm.successMessage = "Present all of the current user's data here.";
-    //     vm.failureMessage = angular.toJson(data.data);
-    //   });
-    // };
   }
 
 })();
@@ -752,23 +725,19 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     }
 
     $scope.openLogin = function (){
-
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'loginModal.html',
         size: 'sm',
         controller: ModalInstanceController,
         resolve: {
-
         }
       });
-
       modalInstance.result.then(function () {
 
       }, function () {
         console.log('Modal dismissed at: ' + new Date());
       });
-
     };
 
     $scope.openStarted = function (){
@@ -780,7 +749,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
         }
       });
-
       modalInstance.result.then(function () {
         $scope.openSignUp();
       }, function () {
@@ -794,10 +762,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         templateUrl: 'signUpModal.html',
         controller: ModalInstanceController,
         resolve: {
-
         }
       });
-
       modalInstance.result.then(function () {
 
       }, function () {
@@ -805,24 +771,9 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       });
     };
 
-
-
-    // $timeout(function() {
-    //  $('#intro-buttons').append('<span id="login" ng-click="openLogin('true')" class="intro btn btn-default fadeIn animated"> Login </span>');
-    //  $('#intro-buttons').append('<span id="started" class="intro btn btn-default fadeIn animated" > Get Started </span>');
-    // }, 1100);
-
     $timeout(function(){
       $scope.showLoginButtons = true;
     }, 1100);
-    // $('.content').on("click", "#login", function() {
-    //   $scope.openLogin('true');
-    // });
-
-    // $('.content').on("click", "#started", function() {
-    //   $scope.openStarted();
-    // });
-
   }
 
   angular
@@ -848,38 +799,30 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       $scope.createUser = function() {
         $log.log('creating user!');
         $scope.user.create()
-
-        .then(function(data, status, headers, config) {
-          $log.debug("Success:", data,status,headers,config)
-
-          // $scope.successMessage = angular.toJson(data.data);
-          $scope.failureMessage = "Present any error messages here.";
-          // $scope.user.clear();
-          $uibModalInstance.close();
-          $scope.auth.email = $scope.user.email;
-          $scope.auth.password = $scope.user.password;
-          $scope.logInUser();
-          $state.go('gamePage');
-        })
-
-        .catch(function(data, status, headers, config) {
-          $log.debug("Failure:", data,status,headers,config)
-
-          $scope.successMessage = "Present all of the current user's data here.";
-          $scope.failureMessage = angular.toJson(data.data);
-        });
+          .then(function(data, status, headers, config) {
+            $log.debug("Success:", data,status,headers,config)
+            $scope.failureMessage = "Present any error messages here.";
+            // $scope.user.clear();
+            $uibModalInstance.close();
+            $scope.auth.email = $scope.user.email;
+            $scope.auth.password = $scope.user.password;
+            $scope.logInUser();
+            $state.go('gamePage');
+          })
+          .catch(function(data, status, headers, config) {
+            $log.debug("Failure:", data,status,headers,config)
+            $scope.successMessage = "Present all of the current user's data here.";
+            $scope.failureMessage = angular.toJson(data.data);
+          });
       };
 
       $scope.logInUser = function() {
 
         $scope.auth.logIn()
-
           .then(function(data) {
             $log.debug("Success:", data)
-
              return $scope.user.currentUserData();
           })
-
           .then(function(data) {
             $log.debug("Success logging user:", data)
             $scope.user.currentUser = data;
@@ -890,10 +833,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             $scope.successMessage = angular.toJson(data.data);
             $scope.failureMessage = "Present any error messages here.";
           })
-
           .catch(function(data, status, headers, config) {
             $log.debug("Failure:", data, status, headers, config)
-
             $scope.successMessage = "Present all of the current user's data here.";
             $scope.failureMessage = angular.toJson(data.data);
           });
@@ -935,7 +876,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     };
     var currentUser;
 
-
     return auth;
 
     function logIn() {
@@ -960,9 +900,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       });
     }
 
-    // function currentUser() {
-    //   return current;
-    // }
 
     function logOut() {
       tokenService.clear();
@@ -1102,7 +1039,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         })
       }).then(function() {
           currentUserData();
-          // clear();
           $log.log('the updated data is', data.data);
           // authService.currentUser = data.data;
       });
@@ -1117,11 +1053,8 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       user.dob      = "";
     }
 
-
-
     function currentUserData() {
       $log.debug("Retrieving current user data.");
-
       return $http({
         url:     "http://localhost:3000/api/me",
         method:  "GET"

@@ -33,7 +33,19 @@
       $scope.status.isopen = !$scope.status.isopen;
     };
 
-    dd.currentUser = userDataService.currentUser;
+    dd.loadData = function () {
+      userDataService.currentUserData()
+      .then(function() {
+
+        dd.currentUser = userDataService.currentUser;
+      });
+    }
+
+    userDataService.currentUserData()
+      .then(function() {
+
+        dd.currentUser = userDataService.currentUser;
+      });
 
   };
 

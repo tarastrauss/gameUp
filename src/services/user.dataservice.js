@@ -54,7 +54,6 @@
         })
       }).then(function() {
           currentUserData();
-          // clear();
           $log.log('the updated data is', data.data);
           // authService.currentUser = data.data;
       });
@@ -69,11 +68,8 @@
       user.dob      = "";
     }
 
-
-
     function currentUserData() {
       $log.debug("Retrieving current user data.");
-
       return $http({
         url:     "http://localhost:3000/api/me",
         method:  "GET"

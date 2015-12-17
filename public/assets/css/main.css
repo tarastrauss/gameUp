@@ -3456,6 +3456,32 @@ body {
     box-shadow: 3px 3px 3px black;
 }
 
+.instructions {
+  width: 80%;
+  padding-top: 25px;
+  margin: 0 auto;
+  font-size: 19px;
+  padding-bottom: 34px;
+}
+
+#decode-answer {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+#submit-code {
+  margin-top: 25px;
+}
+
+#exclaim {
+  font-size: 24px;
+  padding-top: 4px;
+}
+#user-code {
+  width: 80%;
+  margin: 0 auto;
+  font-size: 17px;
+}
 #intro-buttons {
   width: 250px;
   margin: 0 auto;
@@ -3464,6 +3490,12 @@ body {
   position: relative;
 
 }
+
+.code-input {
+  display: inline-block;
+  width: 30px;
+  margin-bottom: 10px;
+}
 .nav-right {
   float: right;
 }
@@ -3471,6 +3503,7 @@ body {
 .navbar {
   border-radius: 0px;
 }
+
 
 #nav-inform {
   color: white;

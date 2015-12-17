@@ -19,7 +19,6 @@
     };
     var currentUser;
 
-
     return auth;
 
     function logIn() {
@@ -44,9 +43,6 @@
       });
     }
 
-    // function currentUser() {
-    //   return current;
-    // }
 
     function logOut() {
       tokenService.clear();

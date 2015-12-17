@@ -14,14 +14,14 @@
 
 
 
-<div class="container" id="game" ng-cloak ng-controller="GameController as vm">
-  <h2 id ="level"> Level {{vm.currentUser.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn btn-default" ng-click="vm.reset()"> Try Again </button>
+<div class="container" id="game" ng-cloak ng-controller="GameController as vm" ng-init="vm.loadData()">
+  <h2 id ="level"> Level {{vm.level}} - {{vm.gameName}} </h2> <button id="reset" class="btn modal-btn btn-default" ng-click="vm.reset()"> Try Again </button>
   <div id="gameView">
 
  <!--      <div ui-view="specificGame" layout-fill>
       PAGE TEMPLATES INSERT HERE
       </div> -->
-    <div id="game1" ng-if="vm.currentUser.level=='1'">
+    <div id="game1" ng-if="vm.level=='1'">
       <div class="game1-row">
         <div ng-click="vm.addTurn(0)" class="game1-col script" id="game1-1">{{vm.box[0]}}
         </div>
@@ -50,7 +50,25 @@
     </div>
 
 
-
+    <div id="game2" ng-if="vm.level=='2'">
+      <div class="instructions text">
+        To play this game, decode the letters below to discover a secret message! Each letter represents a different letter
+          of the alphabet in the message.
+      </div>
+        <div id ="decode-answer"> {{vm.showAnswer}}!</div>
+        <div id = "user-code" class = "text">
+          <form class="pure-form center" ng-submit="vm.checkWinner()">
+            <fieldset class="pure-group center">
+              <span  ng-repeat="letter in vm.showAnswer track by $index">
+                <span class="space" ng-if="letter === ' '">&nbsp;&nbsp;&nbsp;</span>
+                <input type="text" ng-if="letter !== ' '" class="code-input" ng-model="vm.userAnswer[$index]">
+              </span><span id="exclaim">!</span>
+              <button type="submit" id="submit-code" class="modal-btn btn">Submit</button>
+            </fieldset>
+          </form>
+  {{vm.userAnswer}}
+        </div>
+    </div>
 
 
 

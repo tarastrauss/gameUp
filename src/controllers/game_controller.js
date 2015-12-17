@@ -4,19 +4,24 @@
   angular
       .module("gameUpApp")
       .controller("GameController", GameController);
-      // .config(specificGameRoutes);
 
-  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q'];
-  // specificGameRoutes.$inject = ["$stateProvder"];
+  GameController.$inject = ["$log", "userDataService", "$location", '$uibModal', 'authService', '$q', '$timeout'];
 
-  function GameController($log, userDataService, $location, $uibModal, authService, $q) {
+  function GameController($log, userDataService, $location, $uibModal, authService, $q, $timeout) {
     var vm = this;
 
     vm.message = "fun";
 
+
     vm.user = userDataService;
     vm.auth = authService;
-    vm.currentUser = userDataService.currentUser;
+
+    vm.level = "2";
+    vm.loadData = function () {
+      vm.currentUser = userDataService.currentUser;
+
+      vm.level = userDataService.currentUser.level;
+    }
 
     vm.wonGame = function (level) {
       var modalInstance = $uibModal.open({
@@ -31,16 +36,13 @@
       modalInstance.result.then(function () {
         vm.user.updateLevel(level);
       }).then(function () {
-        console.log('Modal dismissed at: ' + new Date());
-        userDataService.currentUserData();
-      }).then(function() {
-        vm.currentUser = userDataService.currentUser;
-        $log.log('you won the game and the user in the game controller is now', vm.currentUser);
+        vm.level = level;
+        $log.log('the user level is ', vm.level, 'and the other level is', level);
       });
 
     }
 
-    if (vm.currentUser.level == '1') {
+    if (vm.level == '1') {
       vm.gameOneWon = false;
       vm.gameName = "Tic Tac Toe"
       // vm.turn = true;
@@ -49,14 +51,10 @@
       var computerMove;
       vm.addTurn = function (num) {
         if (vm.box[num] === " ") {
-          // if (vm.turn) {
             vm.box[num] = "X";
-            // vm.turn = false;
-          // } else {
-            computerTurn();
-            // vm.box[num] = "O";
-            // vm.turn = true;
-          // }
+            $timeout(function(){
+              computerTurn();
+             }, 1400);
         }
         vm.checkForWinner();
       }
@@ -73,11 +71,11 @@
         } while (!computerDone)
       }
       vm.reset = function (){
-        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+        vm.box = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
       }
       vm.checkForWinner = function () {
         vm.box.forEach(function(singleBox, index) {
-          if (singleBox !== " ") {
+          if (singleBox === "X") {
             if (index === 0 || index === 3 || index === 6) {
               if (singleBox === vm.box[index + 1] && singleBox === vm.box[index + 2]) {
                 vm.gameOneWon = true;
@@ -101,9 +99,59 @@
           }
         });
         if (vm.gameOneWon) {
-          vm.wonGame("2");
+          vm.wonGame('2');
         }
       }
+    }
+
+    if (vm.level == '2') {
+      vm.gameWon = false;
+      vm.gameName = "Decoder";
+      var answer = "WDI graduates will ALL get great jobs";
+      var originalAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+      // var code = Math.floor((Math.random() * 7) + 1);
+      var shuffledAlphabet = originalAlphabet.slice();
+      var j;
+      var temp;
+      var codeAnswer = "";
+      function shuffleArray(alphabet) {
+        for (var i = 25; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            temp = alphabet[i];
+            alphabet[i] = alphabet[j];
+            alphabet[j] = temp;
+        }
+        return alphabet;
+      }
+      shuffledAlphabet = shuffleArray(shuffledAlphabet);
+
+      var alphaIndex;
+      for (var i = 0; i < answer.length; i++) {
+        if (answer[i] !== " ") {
+          alphaIndex = originalAlphabet.indexOf(answer[i].toUpperCase());
+          codeAnswer = codeAnswer + shuffledAlphabet[alphaIndex];
+        } else {
+          codeAnswer = codeAnswer + " ";
+        }
+      }
+      vm.showAnswer = codeAnswer;
+      vm.userAnswer = "";
+      for (var i = 0; i < codeAnswer.length; i++) {
+        vm.userAnswer = vm.userAnswer + " ";
+      }
+
+      $log.log('the original alphabet is ', originalAlphabet);
+      $log.log('the shuffled alphabet is ', shuffledAlphabet);
+      $log.log('the shuffled answer is ', codeAnswer);
+       $log.log('the user answer is ', vm.userAnswer);
+
+       vm.checkWinner = function () {
+          if (vm.userAnswer.toUpperCase() == vm.showAnswer) {
+            wonGame('3');
+          } else {
+            $log.log('you did not win');
+          }
+       }
     }
   }
 
@@ -123,8 +171,6 @@
 
     $scope.ok = function () {
       $uibModalInstance.close();
-      // $state.go('gamePage');
-
     };
 
     $scope.cancel = function () {

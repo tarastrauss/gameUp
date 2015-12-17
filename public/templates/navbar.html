@@ -4,7 +4,7 @@
     <div class="navbar-header navbar-brand">
       <!-- <span role="presentation" ui-sref-active="active"> -->
         <!-- <a ui-sref="profilePage">Profile ( {{vm.user.name}} )</a> -->
-        <div ng-controller="DropdownController as dd">
+        <div ng-controller="DropdownController as dd" ng-init="dd.loadData()">
 
           <span uib-dropdown on-toggle="toggled(open)">
             <a class="btn btn-default" id="user" href id="simple-dropdown" uib-dropdown-toggle>

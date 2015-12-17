@@ -16,7 +16,6 @@
             templateUrl: "/templates/landing.html"
           }
         },
-        // templateUrl: "/templates/landing.html",
         controller: "MainController",
         controllerAs: "vm"
       })
@@ -34,7 +33,6 @@
             templateUrl: "/templates/game.html"
           }
         },
-        // templateUrl: "/templates/game.html",
         controller: "GameController",
         controllerAs: "vm"
       });
