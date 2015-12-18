@@ -468,19 +468,21 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
       'Logout'
     ];
 
-    dd.status = {
-      isopen: false
-    };
+    dd.isCollapsed = true;
 
-    dd.toggled = function(open) {
-      $log.log('Dropdown is now: ', open);
-    };
+    // dd.status = {
+    //   isopen: false
+    // };
 
-    dd.toggleDropdown = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-      $scope.status.isopen = !$scope.status.isopen;
-    };
+    // dd.toggled = function(open) {
+    //   $log.log('Dropdown is now: ', open);
+    // };
+
+    // dd.toggleDropdown = function($event) {
+    //   $event.preventDefault();
+    //   $event.stopPropagation();
+    //   $scope.status.isopen = !$scope.status.isopen;
+    // };
 
     dd.loadData = function () {
       userDataService.currentUserData()
@@ -517,26 +519,20 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
     vm.loadData = function () {
       userDataService.currentUserData()
       .then(function() {
-        // vm.loadGame(vm.user.currentUser.level);
-       // $scope.$apply(function(){
-
         if (vm.user.currentUser.level == '1') {
           vm.game1();
         } else if (vm.user.currentUser.level == '2') {
           vm.game2();
         } else if (vm.user.currentUser.level == '3') {
           vm.game3();
+        } else if (vm.user.currentUser.level == '4') {
+          vm.game4();
+        } else if (vm.user.currentUser.level == '5') {
+          vm.game5();
         }
         vm.currentUser = userDataService.currentUser;
-       // });
-      // $scope.$apply();
-
       });
 
-      // return true;
-      // vm.level       = vm.currentUser.level;
-      // vm.level = 3;
-      // vm.loadGame('3');
     }
 
     vm.loadGame = function(level) {
@@ -546,6 +542,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         vm.game2();
       } else if (level == '3') {
         vm.game3();
+      } else if (level == '4') {
+        vm.game4();
+      } else if (level == '5') {
+        vm.game5();
       }
     }
 
@@ -554,20 +554,11 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         animation: true,
         templateUrl: 'wonGame.html',
         controller: ModalInstanceController
-        // resolve:
-          // vm.loadGame(level)
-
-
       });
       modalInstance.result.then(function () {
         vm.user.updateLevel(level);
-      // // }).then(function () {
-      //   // vm.level = level;
-      //   $log.log('and the other level is', level);
-      // }).then(function(){
-        // vm.loadData();
         vm.loadGame(level);
-        // $state.go('gamePage');
+
       })
     }
 
@@ -672,11 +663,10 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         for (var i = 0; i < codeAnswer.length; i++) {
           vm.userAnswer.push(' ');
         }
-
         $log.log('the original alphabet is ', originalAlphabet);
         $log.log('the shuffled alphabet is ', shuffledAlphabet);
         $log.log('the shuffled answer is ', codeAnswer);
-         $log.log('the user answer is ', vm.userAnswer);
+        $log.log('the user answer is ', vm.userAnswer);
 
          vm.checkWinner = function () {
           var userString = "";
@@ -716,7 +706,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         } else {
           var solutionBox = [2, 3, 4, 1, 1, 4, 3, 2, 3, 2, 1, 4, 4, 1, 2, 3];
         }
-
         do {
           showNum = Math.floor(Math.random() * 16)
           if (vm.setBox[showNum] === 'false') {
@@ -725,7 +714,6 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
             toSix++;
           }
         } while (toSix < 6);
-
         vm.checkWin = function () {
           win = true;
           vm.box.forEach(function(singleBox, index){
@@ -744,6 +732,100 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
         }
       }
 
+      vm.game4 = function () {
+        vm.gameName = "Memory";
+        vm.image = [];
+        // vm.image[1] = "/assets/img/lightning1.jpeg"
+        var black = "/assets/img/black.png";
+        vm.viewImage = [black, black, black, black, black, black, black, black, black, black, black, black, black, black, black, black];
+        var image1 = "/assets/img/lightning1.jpeg";
+        var image2 = "/assets/img/lightning2.jpeg";
+        var image3 = "/assets/img/lightning3.jpeg";
+        var image4 = "/assets/img/lightning4.jpeg";
+        var image5 = "/assets/img/lightning5.jpeg";
+        var image6 = "/assets/img/lightning6.jpeg";
+        var image7 = "/assets/img/lightning7.jpeg";
+        var image8 = "/assets/img/lightning8.jpeg";
+        var randomNum;
+        var firstClicked = "";
+        var imageCounter = 1;
+        var matches = 0;
+        do {
+          randomNum = Math.floor(Math.random() * 16);
+          if (vm.image[randomNum] === undefined) {
+            switch (imageCounter) {
+              case 1: vm.image[randomNum] = image1;
+              break;
+              case 2: vm.image[randomNum] = image1;
+              break;
+              case 3: vm.image[randomNum] = image2;
+              break;
+              case 4: vm.image[randomNum] = image2;
+              break;
+              case 5: vm.image[randomNum] = image3;
+              break;
+              case 6: vm.image[randomNum] = image3;
+              break;
+              case 7: vm.image[randomNum] = image4;
+              break;
+              case 8: vm.image[randomNum] = image4;
+              break;
+              case 9: vm.image[randomNum] = image5;
+              break;
+              case 10: vm.image[randomNum] = image5;
+              break;
+              case 11: vm.image[randomNum] = image6;
+              break;
+              case 12: vm.image[randomNum] = image6;
+              break;
+              case 13: vm.image[randomNum] = image7;
+              break;
+              case 14: vm.image[randomNum] = image7;
+              break;
+              case 15: vm.image[randomNum] = image8;
+              break;
+              case 16: vm.image[randomNum] = image8;
+              break;
+            }
+              imageCounter++;
+
+          }
+        } while (imageCounter <= 16);
+
+        vm.displayImage = function(index){
+          vm.viewImage[index] = vm.image[index];
+          if (firstClicked === "") {
+            firstClicked = index;
+          } else {
+            if (!checkForSame(index, firstClicked)){
+              $timeout(function(){
+                vm.viewImage[index] = black;
+                vm.viewImage[firstClicked] = black;
+                firstClicked = "";
+              }, 1200);
+            } else {
+              matches++;
+              firstClicked="";
+              checkForWinner();
+            }
+          }
+        }
+        function checkForSame (second, first) {
+          return (vm.image[second] === vm.image[first]);
+        }
+
+        function checkForWinner() {
+          $log.log('there are ', matches, ' matches');
+          if (matches === 8) {
+            vm.wonGame('5');
+          }
+        }
+
+      }
+
+      vm.game5 = function () {
+        vm.gameName = "coming soon!";
+      }
   }
 
   angular

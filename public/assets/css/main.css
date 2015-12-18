@@ -3481,6 +3481,43 @@ body {
 
 }
 
+#memory-board {
+    width: 60%;
+  height: 320px;
+  margin: 0 auto;
+  margin-top: -15px;
+  /*padding-top: 10px;*/
+  /*border: 2px solid black;*/
+}
+
+.memory-row {
+  width: 100%;
+  height: 80px;
+  padding-bottom: 4px;
+  /*border: 2px solid black;*/
+}
+
+.memory-box {
+  height: 100%;
+  width: 80px;
+  display: inline-block;
+  border-radius: 12px;
+  vertical-align: top;
+  border: 0px;
+  z-index: -40;
+}
+
+.black{
+  height: 100%;
+  width: 80px;
+  display: inline-block;
+  vertical-align: top;
+  background-image: url("/assets/img/black.png");
+  border-radius: 12px;
+  z-index: 800;
+}
+
+
 .tic-value {
   height: 100px;
   width: 100px;

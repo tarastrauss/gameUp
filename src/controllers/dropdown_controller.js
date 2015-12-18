@@ -19,19 +19,21 @@
       'Logout'
     ];
 
-    dd.status = {
-      isopen: false
-    };
+    dd.isCollapsed = true;
 
-    dd.toggled = function(open) {
-      $log.log('Dropdown is now: ', open);
-    };
+    // dd.status = {
+    //   isopen: false
+    // };
 
-    dd.toggleDropdown = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-      $scope.status.isopen = !$scope.status.isopen;
-    };
+    // dd.toggled = function(open) {
+    //   $log.log('Dropdown is now: ', open);
+    // };
+
+    // dd.toggleDropdown = function($event) {
+    //   $event.preventDefault();
+    //   $event.stopPropagation();
+    //   $scope.status.isopen = !$scope.status.isopen;
+    // };
 
     dd.loadData = function () {
       userDataService.currentUserData()

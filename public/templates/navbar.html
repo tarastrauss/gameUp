@@ -6,11 +6,11 @@
         <!-- <a ui-sref="profilePage">Profile ( {{vm.user.name}} )</a> -->
         <div ng-controller="DropdownController as dd" ng-init="dd.loadData()">
 
-          <span uib-dropdown on-toggle="toggled(open)">
-            <a class="btn btn-default" id="user" href id="simple-dropdown" uib-dropdown-toggle>
+          <span uib-dropdown on-toggle="toggled(open)" >
+            <a class="btn btn-default" id="user" href id="simple-dropdown" uib-dropdown-toggle ng-click="isCollapsed = !isCollapsed">
               {{dd.user.currentUser.name}} ( {{dd.user.currentUser.level}} )  <span class="caret"></span>
             </a>
-            <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
+            <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown" uib-collapse="!isCollapsed">
               <li role="menuitem">
                 <a href> Profile</a>
               </li>

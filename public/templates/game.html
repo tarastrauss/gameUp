@@ -112,18 +112,37 @@
 
     <div id="game4" ng-if="vm.user.currentUser.level=='4'">
       <div class="instructions text">
-        The object of the game is to move all the disks onto a different pole. You can only move one disk at a time
-        and you must follow size order -- a bigger disk can't go on a smaller disk.
+        Click on a box to discover what image is underneath! Match 2 of the same object to unlock the box. Unlock the
+        whole board to win the game!
       </div>
-      <div id="pole1" class="pole">
-      </div>
-      <div id="pole1" class="pole">      </div>
-        <div id ="disk1" class="disk"><div>
-        <div id ="disk2" class="disk"><div>
-        <div id ="disk3" class="disk"><div>
+      <div id="memory-board">
+        <div class="memory-row">
+          <div class="black"><img ng-click="vm.displayImage(0)" ng-src="{{vm.viewImage[0]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(1)" ng-src="{{vm.viewImage[1]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(2)" ng-src="{{vm.viewImage[2]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(3)" ng-src="{{vm.viewImage[3]}}" class="memory-box"></div>
+        </div>
+        <div class="memory-row">
+          <div class="black"><img ng-click="vm.displayImage(4)" ng-src="{{vm.viewImage[4]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(5)" ng-src="{{vm.viewImage[5]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(6)" ng-src="{{vm.viewImage[6]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(7)" ng-src="{{vm.viewImage[7]}}" class="memory-box"></div>
+        </div>
+        <div class="memory-row">
+          <div class="black"><img ng-click="vm.displayImage(8)" ng-src="{{vm.viewImage[8]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(9)" ng-src="{{vm.viewImage[9]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(10)" ng-src="{{vm.viewImage[10]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(11)" ng-src="{{vm.viewImage[11]}}" class="memory-box"></div>
+        </div>
+        <div class="memory-row">
+          <div class="black"><img ng-click="vm.displayImage(12)" ng-src="{{vm.viewImage[12]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(13)" ng-src="{{vm.viewImage[13]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(14)" ng-src="{{vm.viewImage[14]}}" class="memory-box"></div>
+          <div class="black"><img ng-click="vm.displayImage(15)" ng-src="{{vm.viewImage[15]}}" class="memory-box"></div>
+        </div>
 
 
-      <div id="pole1" class="pole">
+
       </div>
 
 
