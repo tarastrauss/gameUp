@@ -127,9 +127,9 @@
         }
       }
 
-    vm.game3 = function() {
+    vm.game4 = function() {
      // if (vm.level == '2') {
-        $log.log('user is in level 3!');
+        $log.log('user is in level 4!');
         vm.gameName = "Cryptogram";
         vm.tryAgain = false;
         var answer = "WDI graduates will ALL get great jobs";
@@ -176,7 +176,7 @@
           })
             $log.log(userString);
             if (userString == answer.toUpperCase()) {
-              vm.wonGame('4');
+              vm.wonGame('5');
               $log.log('you have won!');
             } else {
               $log.log('you did not win');
@@ -233,7 +233,7 @@
         }
       }
 
-      vm.game4 = function () {
+      vm.game3 = function () {
         vm.gameName = "Memory";
         vm.image = [];
         // vm.image[1] = "/assets/img/lightning1.jpeg"
@@ -318,7 +318,7 @@
         function checkForWinner() {
           $log.log('there are ', matches, ' matches');
           if (matches === 8) {
-            vm.wonGame('5');
+            vm.wonGame('4');
           }
         }
 
